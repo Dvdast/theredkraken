@@ -1,0 +1,2237 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+        content="The Red Kraken — Director profesional de juegos de rol, guionista y actor de voz. Experiencias narrativas donde tus decisiones importan.">
+
+    <meta name="theme-color" content="#08090B">
+
+    <title>The Red Kraken — Experiencias de rol</title>
+
+    <!-- =====================================================
+         FAVICON
+    ====================================================== -->
+    <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+    <link rel="alternate icon" type="image/png" href="assets/img/favicon.png">
+    <link rel="apple-touch-icon" href="assets/img/favicon.png">
+
+    <!-- =====================================================
+         FONTS
+    ====================================================== -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+
+    <!-- =====================================================
+         TAILWIND
+    ====================================================== -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+
+    <!-- =====================================================
+         TAILWIND CONFIG
+    ====================================================== -->
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+
+                    colors: {
+                        kraken: {
+                            black: '#08090B',
+                            surface: '#101216',
+                            light: '#171A20',
+                            red: '#9F1624',
+                            crimson: '#C51E30',
+                            ivory: '#F3F1ED',
+                            muted: '#A5A5A5',
+                            border: '#292C33'
+                        }
+                    },
+
+                    fontFamily: {
+                        display: ['Cinzel', 'serif'],
+                        sans: ['Inter', 'sans-serif']
+                    },
+
+                    boxShadow: {
+                        redglow: '0 0 40px rgba(197,30,48,.25)',
+                        redglowstrong: '0 0 60px rgba(197,30,48,.40)'
+                    }
+                }
+            }
+        }
+    </script>
+
+
+    <!-- =====================================================
+         SMALL BASE STYLES
+    ====================================================== -->
+
+    <style>
+        ::selection {
+            background: #9F1624;
+            color: #F3F1ED;
+        }
+
+        body {
+            background: #08090B;
+        }
+
+        /* subtle cinematic grain */
+
+        .grain::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+
+            opacity: .035;
+
+            background-image:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='.9'/%3E%3C/svg%3E");
+
+            z-index: 30;
+        }
+
+
+        /* scrollbar */
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #08090B;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #292C33;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9F1624;
+        }
+
+
+        /* Reveal system prepared for JS */
+
+        [data-reveal] {
+            opacity: 0;
+            transform: translateY(30px);
+            transition:
+                opacity .8s ease,
+                transform .8s ease;
+        }
+
+        [data-reveal].is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+
+        /* Shared interactive lighting */
+
+        [data-light-card],
+        [data-light-button] {
+            --mouse-x: 50%;
+            --mouse-y: 50%;
+        }
+
+        [data-light-card] {
+            position: relative;
+            isolation: isolate;
+            overflow: hidden;
+            transition: border-color .35s ease;
+        }
+
+        [data-light-card]::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0;
+            background: radial-gradient(360px circle at var(--mouse-x) var(--mouse-y),
+                    rgba(197, 30, 48, .12),
+                    transparent 60%);
+            transition: opacity .35s ease;
+        }
+
+        [data-light-card]::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 3;
+            opacity: 0;
+            border: 1px solid rgba(197, 30, 48, .5);
+            mask-image: radial-gradient(170px circle at var(--mouse-x) var(--mouse-y),
+                    #000,
+                    transparent 72%);
+            -webkit-mask-image: radial-gradient(170px circle at var(--mouse-x) var(--mouse-y),
+                    #000,
+                    transparent 72%);
+            transition: opacity .35s ease;
+        }
+
+        [data-light-card].is-lit {
+            border-color: rgba(197, 30, 48, .42);
+        }
+
+        [data-light-card].is-lit::before,
+        [data-light-card].is-lit::after {
+            opacity: 1;
+        }
+
+        [data-light-button] {
+            position: relative;
+            isolation: isolate;
+            overflow: hidden;
+            transition: border-color .3s ease, background-color .3s ease;
+        }
+
+        [data-light-button]::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0;
+            background: radial-gradient(180px circle at var(--mouse-x) var(--mouse-y),
+                    rgba(255, 115, 115, .18),
+                    transparent 68%);
+            transition: opacity .3s ease;
+        }
+
+        [data-light-button].is-lit {
+            border-color: rgba(255, 115, 115, .8);
+        }
+
+        [data-light-button].is-lit::before {
+            opacity: 1;
+        }
+
+        [data-light-button]>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        [data-light-button]:focus-visible,
+        [data-light-card]:focus-visible {
+            outline: 2px solid rgba(243, 241, 237, .9);
+            outline-offset: 4px;
+        }
+
+        .experience-copy {
+            transition: transform .45s ease;
+        }
+
+        .experience-arrow {
+            opacity: 0;
+            transform: translateY(5px);
+            transition: opacity .35s ease, transform .35s ease;
+        }
+
+        [data-light-card]:hover .experience-copy,
+        [data-light-card]:focus-within .experience-copy {
+            transform: translateY(-8px);
+        }
+
+        [data-light-card]:hover .experience-arrow,
+        [data-light-card]:focus-within .experience-arrow {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .ambient-light-section {
+            position: relative;
+            isolation: isolate;
+        }
+
+        .ambient-light-section::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+            background: radial-gradient(ellipse 70% 55% at 50% 15%,
+                    rgba(159, 22, 36, .075),
+                    transparent 72%);
+        }
+
+        #cursor-light {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 520px;
+            height: 520px;
+            pointer-events: none;
+            z-index: 35;
+            opacity: 0;
+            border-radius: 999px;
+            background: radial-gradient(circle,
+                    rgba(197, 30, 48, .075) 0%,
+                    rgba(159, 22, 36, .035) 34%,
+                    transparent 70%);
+            filter: blur(18px);
+            transform: translate3d(-50%, -50%, 0);
+            transition: opacity .7s ease;
+            will-change: transform, opacity;
+        }
+
+        #cursor-light.hero-active {
+            opacity: .16;
+        }
+
+        .dice-section::before {
+            transition: opacity .35s ease;
+        }
+
+        .dice-section.dice-fumble::before {
+            animation: dice-fumble 700ms ease-out;
+        }
+
+        #dice-result.dice-pulse {
+            animation: dice-pulse 650ms ease-out;
+        }
+
+        #dice-result.dice-critical {
+            animation: dice-critical 800ms ease-out;
+        }
+
+        @keyframes dice-pulse {
+            0% {
+                filter: drop-shadow(0 0 0 rgba(197, 30, 48, 0));
+            }
+
+            40% {
+                filter: drop-shadow(0 0 20px rgba(197, 30, 48, .45));
+            }
+
+            100% {
+                filter: drop-shadow(0 0 0 rgba(197, 30, 48, 0));
+            }
+        }
+
+        @keyframes dice-critical {
+            0% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 0 rgba(197, 30, 48, 0));
+            }
+
+            35% {
+                transform: scale(1.04);
+                filter: drop-shadow(0 0 34px rgba(197, 30, 48, .72));
+            }
+
+            100% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 0 rgba(197, 30, 48, 0));
+            }
+        }
+
+        @keyframes dice-fumble {
+            0% {
+                opacity: 1;
+            }
+
+            35% {
+                opacity: .35;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+
+        /* Accessibility */
+
+        @media (prefers-reduced-motion: reduce) {
+
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            [data-reveal] {
+                opacity: 1;
+                transform: none;
+            }
+
+            #cursor-light {
+                display: none;
+            }
+
+            [data-light-card]::before,
+            [data-light-card]::after,
+            [data-light-button]::before {
+                transition: none;
+            }
+
+            .experience-copy,
+            .experience-arrow {
+                transform: none;
+                transition: none;
+            }
+
+            .experience-arrow {
+                opacity: 1;
+            }
+
+            #dice-result.dice-pulse,
+            #dice-result.dice-critical,
+            .dice-section.dice-fumble::before {
+                animation: none;
+            }
+        }
+    </style>
+
+</head>
+
+
+<body class="bg-kraken-black font-sans text-kraken-ivory antialiased overflow-x-hidden">
+
+
+    <!-- =====================================================
+         AMBIENT BACKGROUND
+    ====================================================== -->
+
+    <div class="fixed inset-0 -z-50 pointer-events-none" aria-hidden="true">
+
+        <div class="absolute inset-0 bg-kraken-black"></div>
+
+        <div class="absolute inset-0 opacity-70
+            bg-[radial-gradient(circle_at_75%_20%,rgba(159,22,36,0.15),transparent_35%)]"></div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header id="site-header" class="fixed top-0 left-0 z-50 w-full
+        border-b border-transparent
+        transition-all duration-500">
+
+        <div class="mx-auto flex h-20 max-w-[1440px]
+            items-center justify-between
+            px-6 lg:px-10">
+
+
+            <!-- LOGO -->
+
+            <a href="#inicio" class="group flex items-center gap-3" aria-label="The Red Kraken">
+
+                <div class="flex h-9 w-9 items-center justify-center
+                    rounded-full
+                    border border-kraken-red/50
+                    font-display
+                    text-kraken-crimson
+                    transition duration-300
+                    group-hover:border-kraken-crimson
+                    group-hover:shadow-redglow">
+                    K
+                </div>
+
+                <span class="font-display text-sm
+                    tracking-[0.14em]
+                    sm:text-base">
+                    THE
+
+                    <span class="text-kraken-crimson">
+                        RED KRAKEN
+                    </span>
+
+                </span>
+
+            </a>
+
+
+
+            <!-- DESKTOP NAV -->
+
+            <nav class="hidden items-center gap-8 lg:flex" aria-label="Navegación principal">
+
+                <a href="#experiencias" class="text-[11px]
+                    tracking-[0.16em]
+                    text-white/60
+                    transition hover:text-white">
+                    EXPERIENCIAS
+                </a>
+
+                <a href="#sobre-mi" class="text-[11px]
+                    tracking-[0.16em]
+                    text-white/60
+                    transition hover:text-white">
+                    SOBRE MÍ
+                </a>
+
+                <a href="#historias" class="text-[11px]
+                    tracking-[0.16em]
+                    text-white/60
+                    transition hover:text-white">
+                    HISTORIAS
+                </a>
+
+                <a href="#resenas" class="text-[11px]
+                    tracking-[0.16em]
+                    text-white/60
+                    transition hover:text-white">
+                    RESEÑAS
+                </a>
+
+                <a href="#universo" class="text-[11px]
+                    tracking-[0.16em]
+                    text-white/60
+                    transition hover:text-white">
+                    UNIVERSO
+                </a>
+
+            </nav>
+
+
+
+            <!-- DESKTOP CTA -->
+
+            <a href="#contacto" data-magnetic data-light-button class="group hidden lg:inline-flex
+                items-center gap-3
+                border border-kraken-red
+                bg-kraken-red/10
+                px-6 py-3
+                text-[11px]
+                font-medium
+                tracking-[0.18em]
+                transition duration-300
+                hover:bg-kraken-red
+                hover:shadow-redglow">
+
+                JUEGA CONMIGO
+
+                <span class="transition-transform duration-300
+                    group-hover:translate-x-1">
+                    →
+                </span>
+
+            </a>
+
+
+
+            <!-- MOBILE MENU BUTTON -->
+
+            <button id="menu-toggle" type="button" class="relative flex h-11 w-11
+                items-center justify-center lg:hidden" aria-label="Abrir menú" aria-expanded="false">
+
+                <span class="relative block h-4 w-6">
+
+                    <span class="absolute left-0 top-0
+                        h-px w-full bg-white"></span>
+
+                    <span class="absolute left-0 top-2
+                        h-px w-full bg-white"></span>
+
+                    <span class="absolute bottom-0 left-0
+                        h-px w-full bg-white"></span>
+
+                </span>
+
+            </button>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         MOBILE MENU
+    ====================================================== -->
+
+    <div id="mobile-menu" class="fixed inset-0 z-40 hidden
+        bg-kraken-black/95
+        px-8 pt-32
+        backdrop-blur-xl
+        lg:hidden">
+
+        <nav class="flex flex-col gap-8">
+
+            <a href="#experiencias" class="font-display text-2xl">
+                Experiencias
+            </a>
+
+            <a href="#sobre-mi" class="font-display text-2xl">
+                Sobre mí
+            </a>
+
+            <a href="#historias" class="font-display text-2xl">
+                Historias
+            </a>
+
+            <a href="#resenas" class="font-display text-2xl">
+                Reseñas
+            </a>
+
+            <a href="#universo" class="font-display text-2xl">
+                Universo
+            </a>
+
+            <a href="#contacto" class="mt-4 border border-kraken-red
+                bg-kraken-red/10
+                px-6 py-4
+                text-center text-xs
+                tracking-[0.2em]">
+                JUEGA CONMIGO
+            </a>
+
+        </nav>
+
+    </div>
+
+
+
+    <main>
+
+
+        <!-- =================================================
+             HERO
+        ================================================== -->
+
+        <section id="inicio" class="grain relative flex min-h-screen
+            items-center overflow-hidden">
+
+
+            <!-- =================================================
+                 INTERACTIVE HERO BACKGROUND
+            ================================================== -->
+
+            <div id="hero-environment" class="absolute inset-0 -z-30 overflow-hidden" aria-hidden="true">
+
+                <!-- Main Kraken video container (dual-video seamless loop) -->
+
+                <div id="hero-kraken" class="absolute inset-0
+                           h-full w-full
+                           scale-[1.08]
+                           will-change-transform">
+                    <video id="hero-kraken-a" autoplay muted playsinline class="absolute inset-0
+                               h-full w-full object-cover object-center
+                               transition-opacity duration-1000 opacity-100 pointer-events-none">
+                        <source src="./assets/img/kraken_loop.mp4" type="video/mp4">
+                    </video>
+                    <video id="hero-kraken-b" muted playsinline class="absolute inset-0
+                               h-full w-full object-cover object-center
+                               transition-opacity duration-1000 opacity-0 pointer-events-none">
+                        <source src="./assets/img/kraken_loop.mp4" type="video/mp4">
+                    </video>
+                </div>
+
+                <!-- Deep red glow -->
+
+                <div id="hero-red-glow" class="absolute
+                           right-[5%] top-[10%]
+                           h-[650px] w-[650px]
+                           rounded-full
+                           bg-kraken-red/15
+                           blur-[160px]
+                           will-change-transform"></div>
+
+                <!-- Fog layer 1 -->
+
+                <div id="hero-fog-back" class="absolute
+                           -bottom-[15%] -left-[15%]
+                           h-[60%] w-[130%]
+                           opacity-30
+                           blur-3xl
+                           will-change-transform" style="
+                        background:
+                            radial-gradient(
+                                ellipse at center,
+                                rgba(120,120,120,.20),
+                                transparent 65%
+                            );
+                    "></div>
+
+                <!-- Fog layer 2 -->
+
+                <div id="hero-fog-front" class="absolute
+                           -bottom-[20%] -right-[20%]
+                           h-[65%] w-[120%]
+                           opacity-20
+                           blur-[70px]
+                           will-change-transform" style="
+                        background:
+                            radial-gradient(
+                                ellipse at center,
+                                rgba(180,180,180,.16),
+                                transparent 65%
+                            );
+                    "></div>
+
+                <!-- Mouse spotlight -->
+
+                <div id="hero-spotlight" class="pointer-events-none
+                           absolute inset-0
+                           opacity-0
+                           transition-opacity duration-700" style="
+                        background:
+                            radial-gradient(
+                                500px circle
+                                at var(--hero-x, 70%)
+                                var(--hero-y, 40%),
+                                rgba(197,30,48,.13),
+                                transparent 60%
+                            );
+                    "></div>
+
+                <!-- Dark horizontal overlay -->
+
+                <div class="absolute inset-0
+                           bg-gradient-to-r
+                           from-kraken-black
+                           via-kraken-black/80
+                           to-kraken-black/20"></div>
+
+                <!-- Bottom fade -->
+
+                <div class="absolute inset-0
+                           bg-gradient-to-t
+                           from-kraken-black
+                           via-transparent
+                           to-kraken-black/40"></div>
+
+                <!-- Vignette -->
+
+                <div class="absolute inset-0" style="
+                        background:
+                            radial-gradient(
+                                circle at center,
+                                transparent 40%,
+                                rgba(0,0,0,.45) 100%
+                            );
+                    "></div>
+
+            </div>
+
+
+
+            <!-- HERO CONTENT -->
+
+            <div class="mx-auto w-full max-w-[1440px]
+                px-6 pt-28 lg:px-10">
+
+                <div id="hero-content" class="max-w-3xl will-change-transform">
+
+
+                    <p data-reveal class="mb-6
+                        text-[10px]
+                        font-medium
+                        tracking-[0.35em]
+                        text-kraken-crimson
+                        sm:text-xs">
+                        ROL · NARRATIVA · TERROR · COMUNIDAD
+                    </p>
+
+
+
+                    <h1 data-reveal class="font-display uppercase leading-[0.88]">
+
+                        <span class="block
+                            text-3xl
+                            tracking-[0.12em]
+                            text-[#C9C4BD]
+                            sm:text-4xl
+                            lg:text-5xl">
+                            The Red
+                        </span>
+
+                        <span class="block
+                            text-[clamp(4.3rem,11vw,9rem)]
+                            text-kraken-crimson
+                            drop-shadow-[0_0_35px_rgba(159,22,36,.25)]">
+                            Kraken
+                        </span>
+
+                    </h1>
+
+
+
+                    <h2 data-reveal class="mt-8 max-w-2xl
+                        font-display
+                        text-3xl leading-tight
+                        sm:text-4xl
+                        lg:text-5xl">
+                        Historias que no terminan
+                        cuando acaba la sesión.
+                    </h2>
+
+
+
+                    <p data-reveal class="mt-6
+                        max-w-xl
+                        text-sm leading-7
+                        text-kraken-muted
+                        sm:text-base">
+
+                        Director de juegos de rol profesional
+
+                        <span class="mx-2 text-kraken-red">
+                            ·
+                        </span>
+
+                        Guionista
+
+                        <span class="mx-2 text-kraken-red">
+                            ·
+                        </span>
+
+                        Actor de voz
+
+                    </p>
+
+
+
+                    <!-- HERO CTA -->
+
+                    <div data-reveal class="mt-10
+                        flex flex-col gap-4
+                        sm:flex-row">
+
+
+                        <a href="#experiencias" data-magnetic data-light-button class="group relative
+                            inline-flex
+                            items-center
+                            justify-center
+                            gap-4
+                            overflow-hidden
+                            border border-kraken-crimson
+                            bg-kraken-red
+                            px-7 py-4
+                            text-xs
+                            font-semibold
+                            tracking-[0.18em]
+                            shadow-redglow
+                            transition duration-300
+                            hover:shadow-redglowstrong">
+
+                            <span class="absolute inset-0
+                                translate-y-full
+                                bg-kraken-crimson
+                                transition-transform
+                                duration-300
+                                group-hover:translate-y-0"></span>
+
+                            <span class="relative z-10">
+                                JUEGA CONMIGO
+                            </span>
+
+                            <span class="relative z-10
+                                transition-transform
+                                duration-300
+                                group-hover:translate-x-1">
+                                →
+                            </span>
+
+                        </a>
+
+
+
+                        <a href="#manifiesto" class="group
+                            inline-flex
+                            items-center
+                            justify-center
+                            gap-4
+                            border border-white/20
+                            bg-black/20
+                            px-7 py-4
+                            text-xs
+                            tracking-[0.18em]
+                            backdrop-blur-sm
+                            transition
+                            hover:border-white/50
+                            hover:bg-white/5">
+
+                            DESCUBRE EL KRAKEN
+
+                            <span class="text-kraken-crimson
+                                transition-transform
+                                group-hover:translate-y-1">
+                                ↓
+                            </span>
+
+                        </a>
+
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- HERO QUOTE -->
+
+            <div class="absolute bottom-20 right-10
+                hidden max-w-[240px]
+                text-right
+                font-display
+                text-lg
+                italic
+                leading-relaxed
+                text-white/25
+                xl:block">
+
+                «No son partidas.<br>
+                Son historias<br>
+                que te marcan.»
+
+            </div>
+
+
+
+            <!-- SCROLL -->
+
+            <a href="#manifiesto" class="absolute bottom-7 left-1/2
+                flex -translate-x-1/2
+                flex-col items-center gap-3
+                text-[9px]
+                tracking-[0.3em]
+                text-white/40">
+
+                DESCIENDE AL AVISMO
+
+                <span class="h-10 w-px
+                    bg-gradient-to-b
+                    from-kraken-crimson
+                    to-transparent"></span>
+
+            </a>
+
+        </section>
+
+
+
+        <!-- =================================================
+             MANIFESTO
+        ================================================== -->
+
+        <section id="manifiesto" class="relative
+            border-t border-white/10
+            py-24 lg:py-32">
+
+            <div class="mx-auto max-w-[1440px]
+                px-6 lg:px-10">
+
+                <div class="grid gap-16
+                    lg:grid-cols-[1fr_1.4fr]
+                    lg:items-center">
+
+
+                    <div>
+
+                        <p data-reveal class="mb-5
+                            text-xs
+                            tracking-[0.3em]
+                            text-kraken-crimson">
+                            LA EXPERIENCIA
+                        </p>
+
+
+                        <h2 data-reveal class="font-display
+                            text-4xl leading-tight
+                            sm:text-5xl
+                            lg:text-6xl">
+
+                            No vienes a
+
+                            <span class="text-white/40">
+                                tirar dados.
+                            </span>
+
+                            <br>
+
+                            Vienes a vivir
+
+                            <span class="text-kraken-crimson">
+                                una historia.
+                            </span>
+
+                        </h2>
+
+
+                        <p data-reveal class="mt-7
+                            max-w-lg
+                            leading-7
+                            text-kraken-muted">
+                            La historia, los personajes y tus
+                            decisiones están en el centro de la
+                            experiencia. Cada sesión está diseñada
+                            para hacerte formar parte del relato,
+                            no simplemente observarlo.
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- PILLARS -->
+
+                    <div class="grid gap-px
+                        overflow-hidden
+                        border border-white/10
+                        bg-white/10
+                        md:grid-cols-3">
+
+
+                        <article data-reveal data-light-card class="group relative
+                            bg-[#0D0F12]
+                            p-8 lg:p-9">
+
+                            <span class="text-xs
+                                tracking-[0.2em]
+                                text-kraken-crimson">
+                                01
+                            </span>
+
+                            <h3 class="mt-12
+                                font-display
+                                text-2xl">
+                                Narrativa
+                            </h3>
+
+                            <p class="mt-4
+                                text-sm
+                                leading-6
+                                text-kraken-muted">
+                                Historias construidas alrededor
+                                de personajes, conflictos y
+                                decisiones.
+                            </p>
+
+                        </article>
+
+
+
+                        <article data-reveal data-light-card class="group relative
+                            bg-[#0D0F12]
+                            p-8 lg:p-9">
+
+                            <span class="text-xs
+                                tracking-[0.2em]
+                                text-kraken-crimson">
+                                02
+                            </span>
+
+                            <h3 class="mt-12
+                                font-display
+                                text-2xl">
+                                Interpretación
+                            </h3>
+
+                            <p class="mt-4
+                                text-sm
+                                leading-6
+                                text-kraken-muted">
+                                Personajes con identidad propia
+                                y una dirección centrada en la
+                                interpretación.
+                            </p>
+
+                        </article>
+
+
+
+                        <article data-reveal data-light-card class="group relative
+                            bg-[#0D0F12]
+                            p-8 lg:p-9">
+
+                            <span class="text-xs
+                                tracking-[0.2em]
+                                text-kraken-crimson">
+                                03
+                            </span>
+
+                            <h3 class="mt-12
+                                font-display
+                                text-2xl">
+                                Atmósfera
+                            </h3>
+
+                            <p class="mt-4
+                                text-sm
+                                leading-6
+                                text-kraken-muted">
+                                Música, recursos audiovisuales
+                                y puesta en escena al servicio
+                                de la inmersión.
+                            </p>
+
+                        </article>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             EXPERIENCES
+        ================================================== -->
+
+        <section id="experiencias" class="border-t border-white/10
+            ambient-light-section
+            py-24 lg:py-32">
+
+            <div class="mx-auto max-w-[1440px]
+                px-6 lg:px-10">
+
+
+                <div class="mb-12
+                    flex flex-col gap-6
+                    md:flex-row
+                    md:items-end
+                    md:justify-between">
+
+                    <div data-reveal>
+
+                        <p class="mb-4
+                            text-xs
+                            tracking-[0.3em]
+                            text-kraken-crimson">
+                            EXPERIENCIAS
+                        </p>
+
+                        <h2 class="font-display
+                            text-4xl sm:text-5xl">
+                            Elige tu próxima historia.
+                        </h2>
+
+                    </div>
+
+
+                    <a href="#historias" class="group
+                        text-xs
+                        tracking-[0.2em]
+                        text-white/50
+                        transition
+                        hover:text-white">
+
+                        VER TODAS LAS EXPERIENCIAS
+
+                        <span class="ml-3 inline-block
+                            transition-transform
+                            group-hover:translate-x-2">
+                            →
+                        </span>
+
+                    </a>
+
+                </div>
+
+
+
+                <div class="grid gap-5
+                    md:grid-cols-3">
+
+
+                    <!-- CAMPAIGNS -->
+
+                    <article data-reveal data-light-card class="group relative
+                        min-h-[460px]
+                        overflow-hidden
+                        border border-white/10">
+
+                        <img src="./assets/img/campañas.png" alt="Campañas de The Red Kraken" class="absolute inset-0
+                            h-full w-full
+                            object-cover
+                            transition duration-700
+                            group-hover:scale-105">
+
+                        <div class="absolute inset-0
+                            bg-gradient-to-t
+                            from-black
+                            via-black/20
+                            to-transparent"></div>
+
+
+                        <div class="absolute inset-x-0 bottom-0
+                            p-7 experience-copy">
+
+                            <span class="text-[10px]
+                                tracking-[0.25em]
+                                text-kraken-crimson">
+                                LARGO RECORRIDO
+                            </span>
+
+                            <h3 class="mt-3
+                                font-display
+                                text-3xl">
+                                Campañas
+                            </h3>
+
+                            <p class="mt-2
+                                text-sm
+                                text-white/60">
+                                Historias que evolucionan contigo.
+                            </p>
+
+                            <span class="experience-arrow mt-4 inline-block
+                                text-xs tracking-[0.2em]
+                                text-kraken-crimson">
+                                EXPLORAR →
+                            </span>
+
+                        </div>
+
+                    </article>
+
+
+
+                    <!-- ONE SHOTS -->
+
+                    <article data-reveal data-light-card class="group relative
+                        min-h-[460px]
+                        overflow-hidden
+                        border border-white/10">
+
+                        <img src="./assets/img/one_shot.png" alt="One Shots de The Red Kraken" class="absolute inset-0
+                            h-full w-full
+                            object-cover
+                            transition duration-700
+                            group-hover:scale-105">
+
+                        <div class="absolute inset-0
+                            bg-gradient-to-t
+                            from-black
+                            via-black/20
+                            to-transparent"></div>
+
+
+                        <div class="absolute inset-x-0 bottom-0
+                            p-7 experience-copy">
+
+                            <span class="text-[10px]
+                                tracking-[0.25em]
+                                text-kraken-crimson">
+                                UNA SESIÓN
+                            </span>
+
+                            <h3 class="mt-3
+                                font-display
+                                text-3xl">
+                                One Shots
+                            </h3>
+
+                            <p class="mt-2
+                                text-sm
+                                text-white/60">
+                                Una historia completa.
+                                Una noche para recordarla.
+                            </p>
+
+                            <span class="experience-arrow mt-4 inline-block
+                                text-xs tracking-[0.2em]
+                                text-kraken-crimson">
+                                EXPLORAR →
+                            </span>
+
+                        </div>
+
+                    </article>
+
+
+
+                    <!-- PRIVATE -->
+
+                    <article data-reveal data-light-card class="group relative
+                        min-h-[460px]
+                        overflow-hidden
+                        border border-white/10">
+
+                        <img src="./assets/img/partidas_privadas.png" alt="Partidas privadas" class="absolute inset-0
+                            h-full w-full
+                            object-cover
+                            transition duration-700
+                            group-hover:scale-105">
+
+                        <div class="absolute inset-0
+                            bg-gradient-to-t
+                            from-black
+                            via-black/20
+                            to-transparent"></div>
+
+
+                        <div class="absolute inset-x-0 bottom-0
+                            p-7 experience-copy">
+
+                            <span class="text-[10px]
+                                tracking-[0.25em]
+                                text-kraken-crimson">
+                                TU GRUPO · TU HISTORIA
+                            </span>
+
+                            <h3 class="mt-3
+                                font-display
+                                text-3xl">
+                                Partidas privadas
+                            </h3>
+
+                            <p class="mt-2
+                                text-sm
+                                text-white/60">
+                                Experiencias diseñadas
+                                para grupos.
+                            </p>
+
+                            <span class="experience-arrow mt-4 inline-block
+                                text-xs tracking-[0.2em]
+                                text-kraken-crimson">
+                                EXPLORAR →
+                            </span>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             SYSTEMS
+        ================================================== -->
+
+        <section id="historias" class="border-y border-white/10
+            bg-kraken-surface/40
+            py-14">
+
+            <div class="mx-auto max-w-[1440px]
+                px-6 lg:px-10">
+
+                <div class="flex flex-col gap-10
+                    lg:flex-row
+                    lg:items-center
+                    lg:justify-between">
+
+                    <div data-reveal>
+
+                        <h2 class="font-display
+                            text-2xl">
+                            Universos y sistemas
+                        </h2>
+
+                        <p class="mt-2
+                            text-sm
+                            text-kraken-muted">
+                            Mundos donde las historias cobran vida.
+                        </p>
+
+                    </div>
+
+
+                    <div class="grid flex-1
+                        grid-cols-2 gap-px
+                        bg-white/10
+                        sm:grid-cols-3
+                        lg:max-w-4xl
+                        lg:grid-cols-5">
+
+                        <div class="bg-kraken-black
+                            px-5 py-5
+                            text-center
+                            font-display
+                            text-sm
+                            text-white/60">
+                            Dungeons<br>& Dragons
+                        </div>
+
+                        <div class="bg-kraken-black
+                            px-5 py-5
+                            text-center
+                            font-display
+                            text-sm
+                            text-white/60">
+                            La Llamada<br>de Cthulhu
+                        </div>
+
+                        <div class="bg-kraken-black
+                            px-5 py-5
+                            text-center
+                            font-display
+                            text-sm
+                            text-white/60">
+                            Vampiro
+                        </div>
+
+                        <div class="bg-kraken-black
+                            px-5 py-5
+                            text-center
+                            font-display
+                            text-sm
+                            text-white/60">
+                            Cyberpunk
+                        </div>
+
+                        <div class="bg-kraken-black
+                            px-5 py-5
+                            text-center
+                            font-display
+                            text-sm
+                            text-white/60">
+                            Y más...
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             ABOUT
+        ================================================== -->
+
+        <section id="sobre-mi" class="py-24 lg:py-32">
+
+            <div class="mx-auto
+                grid max-w-[1440px]
+                gap-14
+                px-6
+                lg:grid-cols-2
+                lg:items-center
+                lg:px-10">
+
+
+                <!-- PHOTO -->
+
+                <div data-reveal class="relative">
+
+                    <div class="absolute
+                        -inset-8 -z-10
+                        bg-kraken-red/10
+                        blur-[100px]"></div>
+
+                    <img src="./assets/img/geni.png" alt="Geni — The Red Kraken" class="aspect-[4/5]
+                        w-full
+                        object-cover
+                        grayscale
+                        transition duration-700
+                        hover:grayscale-0">
+
+                </div>
+
+
+
+                <!-- TEXT -->
+
+                <div data-reveal>
+
+                    <p class="mb-5
+                        text-xs
+                        tracking-[0.3em]
+                        text-kraken-crimson">
+                        THE RED KRAKEN
+                    </p>
+
+
+                    <h2 class="font-display
+                        text-4xl
+                        sm:text-5xl
+                        lg:text-6xl">
+                        Detrás del Kraken.
+                    </h2>
+
+
+                    <p class="mt-8
+                        max-w-xl
+                        leading-8
+                        text-kraken-muted">
+                        Geni es director de juegos de rol,
+                        guionista y actor de voz. Su forma de
+                        dirigir pone el foco en la narrativa,
+                        la interpretación y la creación de
+                        experiencias donde los jugadores forman
+                        parte real de la historia.
+                    </p>
+
+
+                    <div class="mt-10
+                        grid grid-cols-2
+                        gap-px
+                        border border-white/10
+                        bg-white/10">
+
+                        <div class="bg-kraken-black p-6">
+
+                            <span class="text-xs
+                                tracking-[0.2em]
+                                text-kraken-crimson">
+                                EXPERIENCIA
+                            </span>
+
+                            <p class="mt-2
+                                font-display
+                                text-xl">
+                                Dirección de rol
+                            </p>
+
+                        </div>
+
+
+                        <div class="bg-kraken-black p-6">
+
+                            <span class="text-xs
+                                tracking-[0.2em]
+                                text-kraken-crimson">
+                                FORMACIÓN
+                            </span>
+
+                            <p class="mt-2
+                                font-display
+                                text-xl">
+                                Comunicación audiovisual
+                            </p>
+
+                        </div>
+
+
+                        <div class="bg-kraken-black p-6">
+
+                            <span class="text-xs
+                                tracking-[0.2em]
+                                text-kraken-crimson">
+                                NARRATIVA
+                            </span>
+
+                            <p class="mt-2
+                                font-display
+                                text-xl">
+                                Guion
+                            </p>
+
+                        </div>
+
+
+                        <div class="bg-kraken-black p-6">
+
+                            <span class="text-xs
+                                tracking-[0.2em]
+                                text-kraken-crimson">
+                                INTERPRETACIÓN
+                            </span>
+
+                            <p class="mt-2
+                                font-display
+                                text-xl">
+                                Actor de voz
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             REVIEWS
+        ================================================== -->
+
+        <section id="resenas" class="border-y border-white/10
+            bg-kraken-surface/30
+            py-24">
+
+            <div class="mx-auto max-w-[1440px]
+                px-6 lg:px-10">
+
+
+                <div data-reveal>
+
+                    <p class="mb-4
+                        text-xs
+                        tracking-[0.3em]
+                        text-kraken-crimson">
+                        RESEÑAS
+                    </p>
+
+                    <h2 class="font-display
+                        text-4xl
+                        sm:text-5xl">
+                        Lo que dicen quienes sobrevivieron.
+                    </h2>
+
+                </div>
+
+
+
+                <div class="mt-12
+                    grid gap-5
+                    lg:grid-cols-3">
+
+
+                    <article data-reveal data-light-card class="border border-white/10
+                        bg-kraken-black
+                        p-7">
+
+                        <span class="text-kraken-crimson">
+                            ★★★★★
+                        </span>
+
+                        <blockquote class="mt-6
+                            font-display
+                            text-lg
+                            leading-8
+                            text-white/80">
+                            “Testimonio pendiente de
+                            contenido definitivo.”
+                        </blockquote>
+
+                    </article>
+
+
+                    <article data-reveal data-light-card class="border border-white/10
+                        bg-kraken-black
+                        p-7">
+
+                        <span class="text-kraken-crimson">
+                            ★★★★★
+                        </span>
+
+                        <blockquote class="mt-6
+                            font-display
+                            text-lg
+                            leading-8
+                            text-white/80">
+                            “Testimonio pendiente de
+                            contenido definitivo.”
+                        </blockquote>
+
+                    </article>
+
+
+                    <article data-reveal data-light-card class="border border-white/10
+                        bg-kraken-black
+                        p-7">
+
+                        <span class="text-kraken-crimson">
+                            ★★★★★
+                        </span>
+
+                        <blockquote class="mt-6
+                            font-display
+                            text-lg
+                            leading-8
+                            text-white/80">
+                            “Testimonio pendiente de
+                            contenido definitivo.”
+                        </blockquote>
+
+                    </article>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             D20 INTERACTION
+        ================================================== -->
+
+        <section class="relative ambient-light-section dice-section
+            overflow-hidden
+            py-28">
+
+            <img src="./assets/img/d20.png" alt="" aria-hidden="true" class="absolute inset-0 -z-30
+                h-full w-full
+                object-cover object-center
+                opacity-[0.58]">
+
+            <div class="absolute inset-0 -z-20
+                bg-gradient-to-b
+                from-kraken-black/55
+                via-kraken-black/35
+                to-kraken-black/75"></div>
+
+            <div class="absolute inset-0 -z-20
+                bg-[radial-gradient(circle_at_center,rgba(159,22,36,.13),transparent_45%)]"></div>
+
+
+            <div class="mx-auto
+                max-w-3xl
+                px-6
+                relative z-10
+                text-center">
+
+                <p data-reveal class="text-xs
+                    tracking-[0.35em]
+                    text-kraken-crimson">
+                    EL DESTINO
+                </p>
+
+
+                <h2 data-reveal class="mt-5
+                    font-display
+                    text-4xl
+                    sm:text-5xl">
+                    El Kraken te observa.
+                </h2>
+
+
+                <p data-reveal class="mt-5
+                    text-kraken-muted">
+                    ¿Te atreves a tentar al destino?
+                </p>
+
+
+
+                <button id="roll-d20" data-magnetic data-light-button class="mt-9
+                    inline-flex items-center justify-center gap-3
+                    border border-kraken-crimson
+                    bg-kraken-red/20
+                    px-8 py-4
+                    text-xs
+                    font-semibold
+                    tracking-[0.2em]
+                    transition duration-300
+                    hover:bg-kraken-red
+                    hover:shadow-redglowstrong">
+                    LANZAR EL D20
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                        class="shrink-0" aria-hidden="true" focusable="false">
+                        <path d="m12 2 9 5v10l-9 5-9-5V7Z" />
+                        <path
+                            d="m12 2-5 7h10l-5-7ZM7 9l-4-2m14 2 4-2M7 9l-4 8m14-8 4 8M7 9l5 9 5-9M3 17l9 1 9-1m-9 1v4" />
+                    </svg>
+                </button>
+
+
+
+                <div id="dice-result" class="mt-10
+                    min-h-[90px]
+                    opacity-0
+                    transition duration-500" aria-live="polite">
+
+                    <div id="dice-number" class="font-display
+                        text-6xl
+                        text-kraken-crimson">
+                        20
+                    </div>
+
+                    <p id="dice-message" class="mt-3
+                        font-display
+                        italic
+                        text-white/60">
+                        Algo se mueve bajo la superficie.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             UNIVERSE
+        ================================================== -->
+
+        <section id="universo" class="border-t border-white/10
+            py-24">
+
+            <div class="mx-auto max-w-[1440px]
+                px-6 lg:px-10">
+
+
+                <div class="grid gap-12
+                    lg:grid-cols-[.7fr_1.3fr]
+                    lg:items-center">
+
+                    <div data-reveal>
+
+                        <p class="mb-4
+                            text-xs
+                            tracking-[0.3em]
+                            text-kraken-crimson">
+                            MÁS ALLÁ DE LA MESA
+                        </p>
+
+                        <h2 class="font-display
+                            text-4xl
+                            sm:text-5xl">
+                            Universo<br>
+                            The Red Kraken.
+                        </h2>
+
+                        <p class="mt-5
+                            text-kraken-muted">
+                            Contenido, comunidad
+                            y más historias.
+                        </p>
+
+                    </div>
+
+
+
+                    <div class="grid gap-3
+                        sm:grid-cols-2">
+
+
+                        <a href="#" data-light-card class="group
+                            border border-white/10
+                            bg-kraken-surface
+                            p-6
+                            transition
+                            hover:border-kraken-red">
+
+                            <span class="flex items-center gap-2
+                                text-xs
+                                tracking-[0.2em]
+                                text-white/40">
+                                <i class="fa-brands fa-instagram text-base
+                                    text-kraken-crimson" aria-hidden="true"></i>
+                                INSTAGRAM
+                            </span>
+
+                            <div class="mt-3
+                                flex items-center
+                                justify-between
+                                font-display
+                                text-xl">
+
+                                Sígueme
+
+                                <span class="text-kraken-crimson
+                                    transition-transform
+                                    group-hover:translate-x-2">
+                                    →
+                                </span>
+
+                            </div>
+
+                        </a>
+
+
+
+                        <a href="#" data-light-card class="group
+                            border border-white/10
+                            bg-kraken-surface
+                            p-6
+                            transition
+                            hover:border-kraken-red">
+
+                            <span class="flex items-center gap-2
+                                text-xs
+                                tracking-[0.2em]
+                                text-white/40">
+                                <i class="fa-brands fa-twitch text-base
+                                    text-kraken-crimson" aria-hidden="true"></i>
+                                TWITCH
+                            </span>
+
+                            <div class="mt-3
+                                flex items-center
+                                justify-between
+                                font-display
+                                text-xl">
+
+                                Directos
+
+                                <span class="text-kraken-crimson
+                                    transition-transform
+                                    group-hover:translate-x-2">
+                                    →
+                                </span>
+
+                            </div>
+
+                        </a>
+
+
+
+                        <a href="#" data-light-card class="group
+                            border border-white/10
+                            bg-kraken-surface
+                            p-6
+                            transition
+                            hover:border-kraken-red">
+
+                            <span class="flex items-center gap-2
+                                text-xs
+                                tracking-[0.2em]
+                                text-white/40">
+                                <i class="fa-solid fa-mug-hot text-base
+                                    text-kraken-crimson" aria-hidden="true"></i>
+                                KO-FI
+                            </span>
+
+                            <div class="mt-3
+                                flex items-center
+                                justify-between
+                                font-display
+                                text-xl">
+
+                                Apoya el proyecto
+
+                                <span class="text-kraken-crimson
+                                    transition-transform
+                                    group-hover:translate-x-2">
+                                    →
+                                </span>
+
+                            </div>
+
+                        </a>
+
+
+
+                        <a href="#" data-light-card class="group
+                            border border-white/10
+                            bg-kraken-surface
+                            p-6
+                            transition
+                            hover:border-kraken-red">
+
+                            <span class="flex items-center gap-2
+                                text-xs
+                                tracking-[0.2em]
+                                text-white/40">
+                                <i class="fa-brands fa-itch-io text-base
+                                    text-kraken-crimson" aria-hidden="true"></i>
+                                ITCH.IO
+                            </span>
+
+                            <div class="mt-3
+                                flex items-center
+                                justify-between
+                                font-display
+                                text-xl">
+
+                                Material y recursos
+
+                                <span class="text-kraken-crimson
+                                    transition-transform
+                                    group-hover:translate-x-2">
+                                    →
+                                </span>
+
+                            </div>
+
+                        </a>
+
+
+
+                        <a href="#" data-light-card class="group
+                            border border-white/10
+                            bg-kraken-surface
+                            p-6
+                            transition
+                            hover:border-kraken-red">
+
+                            <span class="flex items-center gap-2
+                                text-xs
+                                tracking-[0.2em]
+                                text-white/40">
+                                <i class="fa-brands fa-x-twitter text-base
+                                    text-kraken-crimson" aria-hidden="true"></i>
+                                X
+                            </span>
+
+                            <div class="mt-3
+                                flex items-center
+                                justify-between
+                                font-display
+                                text-xl">
+
+                                Sígueme
+
+                                <span class="text-kraken-crimson
+                                    transition-transform
+                                    group-hover:translate-x-2">
+                                    →
+                                </span>
+
+                            </div>
+
+                        </a>
+
+
+
+                        <a href="#" data-light-card class="group
+                            border border-white/10
+                            bg-kraken-surface
+                            p-6
+                            transition
+                            hover:border-kraken-red">
+
+                            <span class="flex items-center gap-2
+                                text-xs
+                                tracking-[0.2em]
+                                text-white/40">
+                                <i class="fa-brands fa-bluesky text-base
+                                    text-kraken-crimson" aria-hidden="true"></i>
+                                BLUESKY
+                            </span>
+
+                            <div class="mt-3
+                                flex items-center
+                                justify-between
+                                font-display
+                                text-xl">
+
+                                Sígueme
+
+                                <span class="text-kraken-crimson
+                                    transition-transform
+                                    group-hover:translate-x-2">
+                                    →
+                                </span>
+
+                            </div>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             FINAL CTA
+        ================================================== -->
+
+        <section id="contacto" class="grain relative
+            ambient-light-section
+            overflow-hidden
+            border-t border-white/10
+            py-36">
+
+            <div class="absolute inset-0 -z-30">
+
+                <img src="./assets/img/decision.png" alt="" class="h-full w-full
+                    object-cover">
+
+            </div>
+
+
+            <div class="absolute inset-0 -z-20
+                bg-black/75"></div>
+
+
+            <div class="absolute inset-0 -z-10
+                bg-[radial-gradient(circle_at_center,rgba(159,22,36,.28),transparent_50%)]"></div>
+
+
+
+            <div class="mx-auto
+                max-w-4xl
+                px-6
+                text-center">
+
+                <p data-reveal class="text-xs
+                    tracking-[0.35em]
+                    text-kraken-crimson">
+                    TU PRÓXIMA HISTORIA
+                </p>
+
+
+                <h2 data-reveal class="mt-6
+                    font-display
+                    text-4xl
+                    leading-tight
+                    sm:text-5xl
+                    lg:text-6xl">
+                    Toda historia empieza
+                    con una decisión.
+                </h2>
+
+
+                <p data-reveal class="mt-5
+                    font-display
+                    text-xl
+                    text-white/60">
+                    Esta es la tuya.
+                </p>
+
+
+                <a href="#" data-magnetic data-light-button class="group
+                    mt-10
+                    inline-flex
+                    items-center
+                    gap-5
+                    border border-kraken-crimson
+                    bg-kraken-red
+                    px-10 py-5
+                    text-xs
+                    font-semibold
+                    tracking-[0.2em]
+                    shadow-redglow
+                    transition
+                    hover:bg-kraken-crimson
+                    hover:shadow-redglowstrong">
+
+                    ENTRA EN LA PARTIDA
+
+                    <span class="transition-transform
+                        group-hover:translate-x-2">
+                        →
+                    </span>
+
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer class="border-t border-white/10
+        bg-black
+        py-12">
+
+        <div class="mx-auto
+            flex max-w-[1440px]
+            flex-col gap-10
+            px-6
+            md:flex-row
+            md:items-end
+            md:justify-between
+            lg:px-10">
+
+
+            <div>
+
+                <div class="font-display
+                    tracking-[0.12em]">
+                    THE
+
+                    <span class="text-kraken-crimson">
+                        RED KRAKEN
+                    </span>
+                </div>
+
+                <p class="mt-3
+                    text-xs
+                    text-white/40">
+                    Historias que no terminan
+                    cuando acaba la sesión.
+                </p>
+
+            </div>
+
+
+
+            <nav class="flex flex-wrap gap-6
+                text-[10px]
+                tracking-[0.18em]
+                text-white/40">
+
+                <a href="#experiencias" class="transition hover:text-white">
+                    EXPERIENCIAS
+                </a>
+
+                <a href="#sobre-mi" class="transition hover:text-white">
+                    SOBRE MÍ
+                </a>
+
+                <a href="#resenas" class="transition hover:text-white">
+                    RESEÑAS
+                </a>
+
+                <a href="#contacto" class="transition hover:text-white">
+                    CONTACTO
+                </a>
+
+            </nav>
+
+
+
+            <p class="text-[10px]
+                text-white/30">
+                © 2026 The Red Kraken.
+                Todos los derechos reservados.
+            </p>
+
+            <p class="text-[10px]
+                text-white/30">
+                dev with
+                <span class="text-kraken-red">♥</span>
+                by
+
+                <a href="https://www.davidgarciadev.es" target="_blank" rel="noopener noreferrer"
+                    class="text-white transition hover:text-white">
+                    david garcia
+                </a>
+            </p>
+
+        </div>
+
+    </footer>
+
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script src="./js/main.js"></script>
+
+</body>
+
+</html>
