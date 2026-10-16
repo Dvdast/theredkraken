@@ -9,8 +9,8 @@ const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
 const motion = { progress: 0, journey: 0, energy: 0 };
 let renderStatic = () => {};
 const journeyTrigger = {
-    trigger: '#modalidades', start: 'top bottom',
-    endTrigger: '#contacto', end: 'center center', invalidateOnRefresh: true,
+    trigger: '#modalidades', start: () => `top ${document.querySelector('.orbit-viewport').clientHeight}px`,
+    endTrigger: '#contacto', end: () => `center ${document.querySelector('.orbit-viewport').clientHeight / 2}px`, invalidateOnRefresh: true,
 };
 
 if (gsap && ScrollTrigger) {
@@ -52,7 +52,7 @@ if (gsap && ScrollTrigger) {
 try {
     const THREE = await import('./vendor/three.module.js');
     const { createD10Data } = await import('./d10.js');
-    const { sampleOrbitPath, orbitBackdropOpacity } = await import('./orbit-path.js');
+    const { sampleOrbitLanding, orbitBackdropOpacity } = await import('./orbit-path.js');
     const brandStyles = getComputedStyle(document.documentElement);
     const brand = Object.fromEntries(['red', 'surface', 'ivory', 'muted'].map(name =>
         [name, brandStyles.getPropertyValue(`--kraken-${name}`).trim()]));
@@ -161,28 +161,28 @@ try {
     let journeyStops = [];
     let journeyStart = 0;
     let journeyEnd = 1;
-    let landingDocumentY = 0;
     const measureJourney = () => {
         const scroll = window.scrollY;
+        const viewHeight = sceneViewport.clientHeight;
+        const viewWidth = sceneViewport.clientWidth;
         const manifesto = manifestoAnchor.getBoundingClientRect();
-        const start = modalities.getBoundingClientRect().top + scroll - innerHeight;
+        const start = modalities.getBoundingClientRect().top + scroll - viewHeight;
         const landing = finalAnchor.getBoundingClientRect();
-        landingDocumentY = landing.top + scroll;
         journeyStart = start;
-        journeyEnd = landingDocumentY - innerHeight / 2;
+        journeyEnd = landing.top + scroll - viewHeight / 2;
         const mobile = innerWidth < 768;
         journeyStops = [{ scroll: start, x: manifesto.left, y: manifesto.top + scroll - start }];
         journeySections.forEach((section, index) => {
             const bounds = section.getBoundingClientRect();
-            const position = bounds.top + scroll + bounds.height / 2 - innerHeight / 2;
+            const position = bounds.top + scroll + bounds.height / 2 - viewHeight / 2;
             // Alternate across the page like the opening right-to-left movement.
             // On mobile keep the same path inside a narrower horizontal corridor.
-            const x = (index % 2 === 0 ? (mobile ? .68 : .76) : (mobile ? .32 : .24)) * innerWidth;
+            const x = (index % 2 === 0 ? (mobile ? .68 : .76) : (mobile ? .32 : .24)) * viewWidth;
             if (position > journeyStops[journeyStops.length - 1].scroll && position < journeyEnd) {
-                journeyStops.push({ scroll: position, x, y: innerHeight * .5 });
+                journeyStops.push({ scroll: position, x, y: viewHeight * .5 });
             }
         });
-        journeyStops.push({ scroll: journeyEnd, x: landing.left, y: innerHeight / 2 });
+        journeyStops.push({ scroll: journeyEnd, x: landing.left, y: viewHeight / 2 });
     };
     let elapsed = 0;
     let previous = 0;
@@ -196,14 +196,14 @@ try {
         if (!visible || document.hidden || contextLost) return;
         // Clip the single fixed WebGL surface to the complete story, through the CTA.
         const storyBounds = story.getBoundingClientRect();
+        const viewport = canvas.getBoundingClientRect();
         const clipTop = Math.max(0, storyBounds.top);
-        const clipBottom = Math.max(0, innerHeight - storyBounds.bottom);
+        const clipBottom = Math.max(0, viewport.bottom - storyBounds.bottom);
         sceneViewport.style.clipPath = `inset(${clipTop}px 0 ${clipBottom}px 0)`;
         if (!reduced()) elapsed += delta * (1 + motion.energy * 2.5);
         const hero = heroAnchor.getBoundingClientRect();
         const manifesto = manifestoAnchor.getBoundingClientRect();
         const t = motion.progress;
-        const viewport = canvas.getBoundingClientRect();
         let x = THREE.MathUtils.lerp(hero.left, manifesto.left, t);
         let y = THREE.MathUtils.lerp(hero.top, manifesto.top, t);
         const inJourney = window.scrollY >= journeyStart;
@@ -211,19 +211,16 @@ try {
             const progress = gsap && ScrollTrigger ? motion.journey
                 : THREE.MathUtils.clamp((window.scrollY - journeyStart) / Math.max(1, journeyEnd - journeyStart), 0, 1);
             const position = journeyStart + progress * (journeyEnd - journeyStart);
-            const point = sampleOrbitPath(journeyStops, position);
+            const landing = finalAnchor.getBoundingClientRect();
+            const point = sampleOrbitLanding(journeyStops, position, { x: landing.left, y: landing.top });
             x = point.x;
             y = point.y;
-            if (progress >= 1) {
-                // Once landed, remain anchored to the actual CTA center as it exits.
-                x = finalAnchor.getBoundingClientRect().left;
-                y = landingDocumentY - window.scrollY;
-            }
             sceneViewport.style.opacity = String(orbitBackdropOpacity(progress));
         } else sceneViewport.style.opacity = '1';
         y -= viewport.top;
+        x -= viewport.left;
         const height = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.z;
-        sculpture.position.set((x / innerWidth - .5) * height * camera.aspect, (.5 - y / innerHeight) * height, 0);
+        sculpture.position.set((x / viewport.width - .5) * height * camera.aspect, (.5 - y / viewport.height) * height, 0);
         const scale = innerWidth < 768 ? Math.min(innerWidth / 640, .65) : Math.min(innerWidth / 1450, 1.12);
         sculpture.scale.setScalar(scale * (1 + motion.energy * .08));
         sculpture.rotation.set(.1 + pointer.y * .08, pointer.x * .1, 0);
@@ -236,9 +233,11 @@ try {
     };
     renderStatic = () => { if (reduced()) draw(); };
     const resize = () => {
+        const width = sceneViewport.clientWidth;
+        const height = sceneViewport.clientHeight;
         renderer.setPixelRatio(Math.min(devicePixelRatio, innerWidth < 768 ? 1.25 : 1.75));
-        renderer.setSize(innerWidth, innerHeight, false);
-        camera.aspect = innerWidth / innerHeight;
+        renderer.setSize(width, height, false);
+        camera.aspect = width / height;
         camera.updateProjectionMatrix();
         measureJourney();
         draw();
@@ -280,6 +279,13 @@ try {
         contextLost = false; resize(); story.classList.add('orbit-ready'); pulse.disabled = false; updateLoop();
     });
     addEventListener('resize', resize, { passive: true });
+    // Dynamic browser chrome changes 100dvh on mobile without consistently
+    // dispatching window.resize. Observe the actual drawing surface as well.
+    const viewportObserver = typeof ResizeObserver === 'function' ? new ResizeObserver(() => {
+        resize();
+        ScrollTrigger?.refresh();
+    }) : null;
+    viewportObserver?.observe(sceneViewport);
     document.addEventListener('visibilitychange', updateLoop);
     motionPreference.addEventListener('change', updateLoop);
     // The stationary sculpture still follows document position without auto rotation.
@@ -297,7 +303,8 @@ try {
     }).catch(() => {});
     addEventListener('pagehide', event => {
         if (event.persisted) return;
-        observer.disconnect(); energyTween?.kill(); renderer.setAnimationLoop(null);
+        observer.disconnect(); viewportObserver?.disconnect(); energyTween?.kill(); renderer.setAnimationLoop(null);
+        removeEventListener('resize', resize);
         ScrollTrigger?.removeEventListener('refresh', measureJourney);
         scene.traverse(object => {
             object.geometry?.dispose();

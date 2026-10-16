@@ -16,6 +16,21 @@ export function sampleOrbitPath(stops, scrollPosition) {
     return { x: last.x, y: last.y };
 }
 
+export function sampleOrbitLanding(stops, scrollPosition, landing) {
+    const point = sampleOrbitPath(stops, scrollPosition);
+    if (!point || stops.length < 2) return point;
+    const final = stops[stops.length - 1];
+    const approach = stops[stops.length - 2];
+    const t = Math.min(1, Math.max(0, (scrollPosition - approach.scroll) / Math.max(1, final.scroll - approach.scroll)));
+    const weight = t * t * (3 - 2 * t);
+    // Blend into the live document anchor before the scrub completes. Switching
+    // coordinate systems only at progress=1 causes a jump after a fast scroll.
+    return {
+        x: point.x + (landing.x - final.x) * weight,
+        y: point.y + (landing.y - final.y) * weight,
+    };
+}
+
 export function orbitBackdropOpacity(progress) {
     const smooth = value => {
         const t = Math.min(1, Math.max(0, value));
