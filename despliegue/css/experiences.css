@@ -1,0 +1,48 @@
+/* Adventure dossiers: three linked covers, natural page scroll.
+   DESIGN_VARIANCE: 8; MOTION_INTENSITY: 7; VISUAL_DENSITY: 4. */
+#experiencias { padding: 90px 0 100px; background: var(--kraken-black); scroll-margin-top: 80px; overflow: hidden; }
+.adventure-shell { max-width: 1360px; padding: 0 40px; margin: auto; }
+.adventure-heading { display: flex; justify-content: space-between; gap: 32px; align-items: end; margin-bottom: 50px; }
+.adventure-heading p { color: var(--kraken-muted); font-size: 10px; letter-spacing: .28em; margin-bottom: 16px; }
+.adventure-heading h2 { font-family: var(--font-display); font-size: clamp(30px, 3.5vw, 48px); line-height: 1.15; max-width: 720px; }
+.adventure-all { color: var(--kraken-muted); font-size: 10px; letter-spacing: .15em; white-space: nowrap; padding-bottom: 5px; }
+.adventure-all:hover { color: var(--kraken-ivory); }
+.adventure-gallery { display: grid; grid-template-columns: 1.12fr 1fr 1fr; gap: 22px; align-items: start; padding: 16px 10px 40px; perspective: 1600px; }
+.adventure-card { position: relative; transform-origin: 50% 85%; background: var(--kraken-surface); border: 1px solid rgb(var(--kraken-muted-rgb) / .2); box-shadow: 0 20px 35px rgb(var(--kraken-black-rgb) / .5); }
+.adventure-card:hover, .adventure-card:focus-within { border-color: var(--kraken-red); }
+.adventure-cover { position: relative; display: block; text-align: left; width: 100%; overflow: hidden; color: var(--kraken-ivory); }
+.adventure-art { position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden; background: var(--kraken-black); }
+.adventure-cover img { position: absolute; inset: -6% 0; width: 100%; height: 112%; object-fit: cover; pointer-events: none; }
+.adventure-art::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, rgb(var(--kraken-black-rgb) / .3), transparent 35%); pointer-events: none; }
+.adventure-tag { position: absolute; left: 16px; top: 16px; z-index: 1; font-size: 9px; letter-spacing: .15em; padding: 8px 10px; background: rgb(var(--kraken-black-rgb) / .9); color: var(--kraken-ivory); border-left: 2px solid var(--kraken-red); }
+.adventure-ordinal { position: absolute; right: 24px; top: 20px; font-family: var(--font-display); font-size: 36px; color: var(--kraken-ivory); z-index: 1; opacity: .65; }
+.adventure-cover-copy { position: relative; z-index: 1; display: block; padding: 24px; }
+.adventure-system { display: block; color: var(--kraken-muted); font-size: 10px; line-height: 1.6; margin-bottom: 12px; }
+.adventure-title { display: block; font-family: var(--font-display); font-size: clamp(23px, 2.3vw, 34px); line-height: 1.15; }
+.adventure-duration { display: block; margin-top: 18px; color: var(--kraken-muted); font-size: 11px; }
+.adventure-card-footer { display: flex; justify-content: space-between; gap: 12px; align-items: center; padding: 20px 24px; border-top: 1px solid rgb(var(--kraken-muted-rgb) / .15); }
+.adventure-price { font-size: 21px; font-weight: 600; color: var(--kraken-ivory); white-space: nowrap; }
+.adventure-price small { display: block; font-size: 10px; font-weight: 400; color: var(--kraken-muted); margin-top: 3px; }
+.adventure-open { font-size: 10px; letter-spacing: .08em; color: var(--kraken-ivory); text-align: right; line-height: 1.6; }
+.adventure-open span { display: block; color: var(--kraken-muted); }
+.adventure-shell a:focus-visible, .adventure-cover:focus-visible { outline: 2px solid var(--kraken-ivory); outline-offset: 6px; }
+.adventure-cover:focus-visible { outline-offset: -6px; }
+@media (max-width: 1023px) {
+  .adventure-gallery { gap: 16px; padding-left: 0; padding-right: 0; }
+  .adventure-cover-copy { padding: 20px 18px; }
+  .adventure-title { font-size: 24px; }
+  .adventure-card-footer { padding: 18px; }
+}
+@media (max-width: 767px) {
+  #experiencias { padding: 64px 0; }
+  .adventure-shell { padding: 0 24px; }
+  .adventure-heading { display: block; margin-bottom: 26px; }
+  .adventure-heading h2 { font-size: 32px; }
+  .adventure-all { display: inline-block; margin-top: 22px; font-size: 9px; }
+  .adventure-gallery { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 10px 0 24px; perspective: none; scrollbar-width: thin; scrollbar-color: var(--kraken-red) var(--kraken-surface); }
+  .adventure-card { flex: 0 0 89%; scroll-snap-align: start; box-shadow: none; }
+  .adventure-title { font-size: 27px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .adventure-gallery { scroll-behavior: auto; }
+}

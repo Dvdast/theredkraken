@@ -1,0 +1,57 @@
+[
+  {
+    "id": "review-06",
+    "text": "Un máster con estilo envolvente",
+    "author": "Vieshel",
+    "rating": null,
+    "context": "",
+    "excerpt": true,
+    "verified": true,
+    "verifiedAt": "2026-10-16",
+    "source": "https://mesasroleras.com/gm/the-redkraken"
+  },
+  {
+    "id": "review-04",
+    "text": "dar vida a la gente",
+    "author": "VicenteJ",
+    "rating": null,
+    "context": "",
+    "excerpt": true,
+    "verified": true,
+    "verifiedAt": "2026-10-16",
+    "source": "https://mesasroleras.com/gm/the-redkraken"
+  },
+  {
+    "id": "review-03",
+    "text": "Majísimo, inclusivo, súper divertido.",
+    "author": "Cristinasdf",
+    "rating": null,
+    "context": "Iniciación a Cthulhu",
+    "excerpt": true,
+    "verified": true,
+    "verifiedAt": "2026-10-16",
+    "source": "https://mesasroleras.com/gm/the-redkraken"
+  },
+  {
+    "id": "review-26",
+    "text": "inclusivo, cuidadoso, atento y profesional.",
+    "author": "Nau_wtwab",
+    "rating": null,
+    "context": "",
+    "excerpt": true,
+    "verified": true,
+    "verifiedAt": "2026-10-16",
+    "source": "https://mesasroleras.com/gm/the-redkraken"
+  },
+  {
+    "id": "review-27",
+    "text": "les hace cobrar vida",
+    "author": "Eowinarwen",
+    "rating": null,
+    "context": "",
+    "excerpt": true,
+    "verified": true,
+    "verifiedAt": "2026-10-16",
+    "source": "https://mesasroleras.com/gm/the-redkraken"
+  }
+]

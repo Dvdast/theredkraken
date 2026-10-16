@@ -1,0 +1,79 @@
+/* Preserve the existing fantasy brand with an asymmetric orbital composition.
+   DESIGN_VARIANCE: 8; MOTION_INTENSITY: 8; VISUAL_DENSITY: 3.
+   Shared layers: section backgrounds 0, atmosphere/canvas 1, content 2. */
+html { overflow-x: clip; }
+.orbit-story { position: relative; isolation: isolate; background: var(--kraken-black); }
+.orbit-stage { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.orbit-viewport { position: fixed; top: 0; left: 0; width: 100%; height: 100dvh; overflow: hidden; }
+.orbit-atmosphere { position: absolute; inset: 0; background: radial-gradient(ellipse at 72% 46%, rgb(var(--kraken-red-rgb) / 0.133), transparent 48%); }
+#orbit-canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 1s; }
+.orbit-ready #orbit-canvas { opacity: 1; }
+.orbit-error .orbit-viewport { display: none; }
+.orbit-fallback { position: absolute; width: min(47vw, 650px); max-width: none; top: 0; left: 0; transform: translate(-50%, -50%); opacity: .8; }
+.orbit-ready .orbit-fallback { opacity: 0; }
+#inicio, #manifiesto { z-index: 2; overflow: hidden; scroll-margin-top: 90px; }
+#inicio { min-height: max(780px, 100dvh); padding: 100px 0 130px; }
+#inicio > .mx-auto { padding-top: 0; }
+#hero-content { max-width: 57%; }
+#hero-content h1 span:last-child { font-size: clamp(4rem, 8vw, 8rem); }
+#hero-content h2 { max-width: 620px; font-size: clamp(1.6rem, 2.7vw, 2.6rem); }
+#hero-content > p:first-child { color: var(--kraken-muted); }
+#hero-content > p { max-width: 510px; }
+#inicio [data-reveal], #manifiesto [data-reveal] { opacity: 1; transform: none; transition: none; }
+.dice-anchor { position: absolute; width: 1px; height: 1px; pointer-events: none; }
+#hero-dice-anchor { left: 75%; top: 49%; }
+#manifesto-dice-anchor { left: 24%; top: 48%; }
+#final-dice-anchor { left: 50%; top: 50%; }
+/* Keep section backgrounds below the travelling canvas and the existing
+   content wrappers above it. Opaque cards and buttons still cover the die. */
+.orbit-story > section:not(#inicio):not(#manifiesto) { position: relative; z-index: auto; isolation: auto; }
+.orbit-story > section > .conversion-shell,
+.orbit-story > section > .adventure-shell,
+.orbit-story > section > .reviews-shell,
+.orbit-story > section > .mx-auto { position: relative; z-index: 2; }
+.orbit-controls { position: absolute; bottom: 105px; right: 7%; display: grid; gap: 13px; text-align: right; }
+.orbit-caption { color: var(--kraken-muted); font-size: 9px; letter-spacing: .22em; }
+#orbit-pulse { justify-self: end; display: flex; gap: 24px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--kraken-red); font-size: 10px; letter-spacing: .18em; color: var(--kraken-ivory); transition: color .2s; }
+#orbit-pulse:hover { color: var(--kraken-muted); }
+#orbit-pulse:disabled { opacity: .45; cursor: default; }
+#orbit-status { color: var(--kraken-muted); font-size: 11px; min-height: 16px; }
+.orbit-story a:focus-visible, .orbit-story button:focus-visible { outline: 2px solid var(--kraken-ivory); outline-offset: 6px; }
+#manifiesto { min-height: 100dvh; padding: 100px 0 110px; }
+.manifesto-layout { display: grid; gap: 42px; width: 53%; margin-left: auto; }
+.manifesto-layout h2 { font-size: clamp(2rem, 3.4vw, 3.5rem); }
+.manifesto-pillars { display: grid; }
+.manifesto-pillars article { display: grid; grid-template-columns: 28px 165px 1fr; align-items: start; gap: 20px; padding: 24px 0; border-top: 1px solid rgb(var(--kraken-ivory-rgb) / 0.125); background: transparent; }
+.manifesto-pillars article h3, .manifesto-pillars article p { margin: 0; }
+.manifesto-pillars article h3 { font-size: 19px; }
+.manifesto-pillars article > span { padding-top: 4px; color: var(--kraken-muted); }
+@media (max-width: 1023px) {
+  #hero-content { max-width: 58%; }
+  #hero-content [data-reveal].flex { flex-direction: column; align-items: flex-start; }
+  .manifesto-pillars article { grid-template-columns: 24px 1fr; gap: 12px; }
+  .manifesto-pillars article p { grid-column: 2; }
+}
+@media (max-width: 767px) {
+  #inicio { min-height: 1050px; padding: 135px 0 485px; align-items: flex-start; }
+  #hero-content { max-width: 100%; }
+  #hero-content h1 span:last-child { font-size: clamp(3.7rem, 15vw, 6rem); }
+  #hero-content h2 { font-size: 26px; margin-top: 24px; }
+  #hero-content > p { margin-top: 20px; line-height: 1.8; }
+  #hero-content [data-reveal].flex { margin-top: 28px; flex-direction: row; gap: 12px; align-items: stretch; }
+  #hero-content [data-reveal].flex a { padding: 14px 12px; font-size: 9px; letter-spacing: .08em; gap: 10px; }
+  #hero-dice-anchor { left: 50%; top: auto; bottom: 275px; }
+  .orbit-controls { bottom: 100px; left: 24px; right: 24px; text-align: center; gap: 8px; }
+  #orbit-pulse { justify-self: center; }
+  .orbit-fallback { width: min(340px, 90vw); }
+  #manifiesto { padding: 370px 0 80px; }
+  #manifesto-dice-anchor { left: 50%; top: 185px; }
+  .manifesto-layout { width: 100%; gap: 32px; }
+  .manifesto-layout h2 { font-size: clamp(2rem, 8vw, 3rem); }
+}
+@media (max-width: 380px) {
+  #inicio { min-height: 1130px; }
+  #hero-content [data-reveal].flex { flex-direction: column; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #orbit-canvas { transition: none; }
+  .orbit-story * { scroll-behavior: auto; }
+}

@@ -1,0 +1,17 @@
+/* Client brand palette. Cinzel and Inter are the selected approved font pair. */
+:root {
+    color-scheme: dark;
+    --kraken-red: #9E1B1B;
+    --kraken-black: #0F1115;
+    --kraken-surface: #1A1D24;
+    --kraken-ivory: #EDEDED;
+    --kraken-muted: #9DA3AE;
+    --kraken-red-rgb: 158 27 27;
+    --kraken-black-rgb: 15 17 21;
+    --kraken-surface-rgb: 26 29 36;
+    --kraken-ivory-rgb: 237 237 237;
+    --kraken-muted-rgb: 157 163 174;
+    --font-display: 'Cinzel', serif;
+    --font-body: 'Inter', sans-serif;
+}
+body { background: var(--kraken-black); color: var(--kraken-ivory); font-family: var(--font-body); }
