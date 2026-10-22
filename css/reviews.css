@@ -1,7 +1,7 @@
 /* A readable, paced carousel for the client's reviews. */
 #resenas { background: var(--kraken-black); padding: 90px 0; scroll-margin-top: 80px; }
 .reviews-shell { max-width: 1440px; margin: auto; padding: 0 40px; }
-.reviews-header { display: flex; align-items: end; justify-content: space-between; gap: 32px; margin-bottom: 42px; }
+.reviews-header { display: flex; align-items: end; justify-content: space-between; gap: 32px; margin-bottom: 30px; }
 .reviews-heading > p { font-size: 10px; letter-spacing: .3em; color: var(--kraken-muted); margin-bottom: 16px; }
 .reviews-heading h2 { max-width: 760px; font-family: var(--font-display); font-size: clamp(30px, 3.5vw, 48px); line-height: 1.18; }
 .reviews-controls { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
@@ -10,17 +10,23 @@
 .reviews-arrow:hover { background: var(--kraken-red); border-color: var(--kraken-red); }
 .reviews-arrow:disabled { opacity: .35; cursor: default; }
 .reviews-viewport { overflow: hidden; touch-action: pan-y; }
-.reviews-track { display: flex; gap: 24px; align-items: stretch; }
-.review-card { flex: 0 0 calc((100% - 24px) / 2); min-width: 0; min-height: 340px; padding: 32px; background: var(--kraken-surface); border-top: 2px solid var(--kraken-red); display: flex; flex-direction: column; }
-.review-top { display: flex; justify-content: space-between; gap: 20px; align-items: center; min-height: 24px; margin-bottom: 28px; }
+.reviews-track { display: flex; gap: 24px; align-items: flex-start; }
+.review-card { flex: 0 0 calc((100% - 24px) / 2); min-width: 0; height: 400px; padding: 24px; background: var(--kraken-surface); border-top: 2px solid var(--kraken-red); display: flex; flex-direction: column; }
+.review-top { display: flex; justify-content: space-between; gap: 16px; align-items: center; min-height: 20px; margin-bottom: 16px; }
 .review-index { color: var(--kraken-muted); font-size: 11px; letter-spacing: .15em; }
-.review-rating { color: var(--kraken-ivory); font-size: 16px; letter-spacing: .15em; }
+.review-rating { color: var(--kraken-red); font-size: 16px; letter-spacing: .15em; white-space: nowrap; }
 .review-pending { color: var(--kraken-muted); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
-.review-card blockquote { color: var(--kraken-ivory); font-family: var(--font-body); font-size: clamp(18px, 1.6vw, 23px); line-height: 1.65; overflow-wrap: anywhere; }
-.review-author { margin-top: auto; padding-top: 32px; color: var(--kraken-ivory); font-size: 13px; }
+.review-card blockquote { color: var(--kraken-ivory); font-family: var(--font-body); font-size: clamp(15px, 1.15vw, 17px); line-height: 1.55; overflow-wrap: anywhere; white-space: pre-line; }
+.review-card blockquote { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 6; line-clamp: 6; max-height: 9.3em; overflow: hidden; flex-shrink: 0; }
+.review-card.is-expanded { height: auto; min-height: 400px; }
+.review-card.is-expanded blockquote { display: block; -webkit-line-clamp: unset; line-clamp: unset; max-height: none; overflow: visible; }
+.review-toggle { align-self: flex-start; min-height: 36px; margin-top: 8px; font-size: 13px; color: var(--kraken-ivory); text-decoration: underline; text-underline-offset: 4px; }
+.review-toggle[hidden] { display: none; }
+.review-toggle:hover { color: var(--kraken-muted); }
+.review-author { margin-top: auto; padding-top: 20px; color: var(--kraken-ivory); font-size: 13px; }
 .review-context { margin-top: 7px; font-size: 11px; color: var(--kraken-muted); }
 .review-source, .reviews-originals { display: inline-block; color: var(--kraken-ivory); font-size: 12px; line-height: 1.8; text-decoration: underline; text-underline-offset: 4px; }
-.review-source { align-self: flex-start; margin-top: 16px; }
+.review-source { align-self: flex-start; margin-top: 10px; }
 .reviews-originals { margin-top: 24px; }
 .review-card > p { color: var(--kraken-muted); line-height: 1.8; }
 .review-card.is-placeholder blockquote { color: var(--kraken-muted); }
@@ -41,8 +47,8 @@
   .reviews-heading h2 { font-size: 32px; }
   .reviews-controls { margin-top: 28px; justify-content: flex-end; }
   .reviews-counter { margin-right: auto; }
-  .review-card { flex-basis: 100%; padding: 26px; min-height: 330px; }
-  .review-card blockquote { font-size: 19px; }
+  .review-card { flex-basis: 100%; padding: 20px; }
+  .review-card blockquote { font-size: 16px; }
   .reviews-footer { flex-wrap: wrap; gap: 18px; }
   .reviews-note { flex-basis: 100%; max-width: none; }
 }

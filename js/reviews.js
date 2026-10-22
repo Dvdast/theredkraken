@@ -1,4 +1,4 @@
-/* Review content is kept in assets/data/reviews.json. No reviews or ratings are invented. */
+/* Review content is kept in assets/data/reviews.json. Decorative stars are not source ratings. */
 (() => {
     const section = document.querySelector('#resenas');
     if (!section) return;
@@ -36,7 +36,7 @@
         clearTimeout(timer); progressAnimation?.kill();
         if (gsap) gsap.set(timerBar, { scaleX: 0 });
     };
-    const canPlay = () => reviews.length > 1 && visible && !hovered && !focused && !userPaused && !preference.matches && !document.hidden && !busy;
+    const canPlay = () => reviews.length > 1 && visible && !hovered && !focused && !userPaused && !preference.matches && !document.hidden && !busy && !track.querySelector('.is-expanded');
     const schedule = () => {
         stopTimer();
         play.disabled = preference.matches || reviews.length < 2;
@@ -56,11 +56,24 @@
             card.setAttribute('aria-hidden', String(!active));
             card.inert = !active;
         });
+        const visibleCards = [...track.children].slice(padding + current, padding + current + count);
+        viewport.style.height = `${Math.ceil(Math.max(...visibleCards.map(card => card.getBoundingClientRect().height)))}px`;
         counter.textContent = `${String(current + 1).padStart(2, '0')} / ${String(reviews.length).padStart(2, '0')}`;
     };
     const measure = () => {
         animation?.kill(); busy = false;
         if (!originals.length) return;
+        [...track.children].forEach(card => {
+            const toggle = card.querySelector('.review-toggle');
+            if (!toggle) return;
+            const expanded = card.classList.contains('is-expanded');
+            card.classList.remove('is-expanded');
+            const quote = card.querySelector('blockquote');
+            toggle.hidden = quote.scrollHeight <= quote.clientHeight + 1;
+            card.classList.toggle('is-expanded', expanded && !toggle.hidden);
+            toggle.setAttribute('aria-expanded', String(expanded && !toggle.hidden));
+            toggle.textContent = expanded && !toggle.hidden ? 'Leer menos' : 'Leer más';
+        });
         step = originals[0].getBoundingClientRect().width + 24;
         setPosition(-(padding + current) * step);
         updateAccessibleCards(); schedule();
@@ -68,6 +81,13 @@
     const move = (direction, manual = true) => {
         if (busy || reviews.length < 2) return;
         stopTimer(); busy = true;
+        track.querySelectorAll('.is-expanded').forEach(card => {
+            card.classList.remove('is-expanded');
+            const toggle = card.querySelector('.review-toggle');
+            toggle.setAttribute('aria-expanded', 'false');
+            toggle.textContent = 'Leer más';
+        });
+        updateAccessibleCards();
         const destination = current + direction;
         current = (destination + reviews.length) % reviews.length;
         if (track.contains(document.activeElement)) viewport.focus({ preventScroll: true });
@@ -86,21 +106,30 @@
     const createCard = (review, index, placeholder) => {
         const card = document.createElement('article');
         card.className = `review-card${placeholder ? ' is-placeholder' : ''}`;
+        card.dataset.reviewIndex = String(index);
         const top = document.createElement('div'); top.className = 'review-top';
         const number = document.createElement('span'); number.className = 'review-index';
         number.textContent = String(index + 1).padStart(2, '0'); top.append(number);
         if (placeholder) {
             const pending = document.createElement('span'); pending.className = 'review-pending';
             pending.textContent = 'Pendiente de cargar'; top.append(pending);
-        } else if (Number.isInteger(review.rating) && review.rating >= 1 && review.rating <= 5) {
+        } else {
             const rating = document.createElement('span'); rating.className = 'review-rating';
-            rating.setAttribute('role', 'img');
-            rating.setAttribute('aria-label', `${review.rating} de 5 estrellas`);
-            rating.textContent = '\u2605'.repeat(review.rating) + '\u2606'.repeat(5 - review.rating); top.append(rating);
+            rating.setAttribute('aria-hidden', 'true');
+            rating.textContent = '\u2605'.repeat(5); top.append(rating);
         }
         const quote = document.createElement('blockquote');
         quote.textContent = placeholder ? 'Esta rese\u00f1a aparecer\u00e1 aqu\u00ed cuando incorporemos su contenido.' : review.text.trim();
         card.append(top, quote);
+        if (!placeholder) {
+            const toggle = document.createElement('button');
+            toggle.type = 'button';
+            toggle.className = 'review-toggle';
+            toggle.textContent = 'Leer más';
+            toggle.setAttribute('aria-expanded', 'false');
+            toggle.hidden = true;
+            card.append(toggle);
+        }
         if (!placeholder && review.author?.trim()) {
             const author = document.createElement('p'); author.className = 'review-author'; author.textContent = review.author.trim(); card.append(author);
         }
@@ -140,7 +169,28 @@
             padding = reviews.length > 1 ? Math.min(2, reviews.length) : 0;
             const leadingClones = padding ? originals.slice(-padding).map(clone) : [];
             track.replaceChildren(...leadingClones, ...originals, ...originals.slice(0, padding).map(clone));
-            note.textContent = 'Selección de extractos literales. Lee cada reseña completa en su fuente.';
+            [...track.children].forEach((card, index) => {
+                const quote = card.querySelector('blockquote');
+                quote.id = `review-text-${index}`;
+                card.querySelector('.review-toggle').setAttribute('aria-controls', quote.id);
+            });
+            track.addEventListener('click', event => {
+                const toggle = event.target.closest('.review-toggle');
+                if (!toggle || busy) return;
+                const card = toggle.closest('.review-card');
+                const expanded = toggle.getAttribute('aria-expanded') !== 'true';
+                [...track.children].filter(item => item.dataset.reviewIndex === card.dataset.reviewIndex).forEach(item => {
+                    item.classList.toggle('is-expanded', expanded);
+                    const button = item.querySelector('.review-toggle');
+                    button.setAttribute('aria-expanded', String(expanded));
+                    button.textContent = expanded ? 'Leer menos' : 'Leer más';
+                });
+                updateAccessibleCards();
+                schedule();
+            });
+            note.textContent = reviews.some(review => review.excerpt)
+                ? 'Incluye extractos literales. Lee las reseñas completas en Mesas Roleras.'
+                : 'Reseñas completas de Mesas Roleras. Puedes consultar los originales en su fuente.';
             previous.disabled = next.disabled = reviews.length < 2;
             previous.addEventListener('click', () => move(-1)); next.addEventListener('click', () => move(1));
             play.addEventListener('click', () => { userPaused = !userPaused; schedule(); });
@@ -167,13 +217,21 @@
             preference.addEventListener('change', measure);
             document.addEventListener('visibilitychange', schedule);
             if ('ResizeObserver' in window) {
-                resizeObserver = new ResizeObserver(measure); resizeObserver.observe(viewport);
+                let measuredWidth;
+                resizeObserver = new ResizeObserver(entries => {
+                    const width = entries[0].contentRect.width;
+                    if (width === measuredWidth) return;
+                    measuredWidth = width;
+                    measure();
+                });
+                resizeObserver.observe(viewport);
             } else addEventListener('resize', measure, { passive: true });
             if ('IntersectionObserver' in window) {
                 observer = new IntersectionObserver(entries => { visible = entries[0].isIntersecting; schedule(); }, { threshold: .25 });
                 observer.observe(viewport);
             } else visible = true;
             measure();
+            document.fonts?.ready.then(measure);
         } catch (error) {
             counter.textContent = '0 / 0';
             note.textContent = 'No se han podido cargar las rese\u00f1as. Prueba a recargar la p\u00e1gina.';

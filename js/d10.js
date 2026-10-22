@@ -1,6 +1,6 @@
 // Pentagonal trapezohedron: twelve vertices and ten planar kite faces.
 // The alternating ring height keeps each four-corner face coplanar.
-export function createD10Data(radius = 1.24, height = 1.55) {
+export function createD10Data(radius = 1.28, height = 1.12) {
     const cosine = Math.cos(Math.PI / 5);
     const ringHeight = height * (1 - cosine) / (1 + cosine);
     const vertices = [[0, height, 0], [0, -height, 0]];

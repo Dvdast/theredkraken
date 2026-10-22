@@ -60,6 +60,36 @@ try {
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.35;
     const scene = new THREE.Scene();
+    // Studio reflections reveal the polished facets even over the transparent canvas.
+    const studioCanvas = document.createElement('canvas');
+    studioCanvas.width = 1024; studioCanvas.height = 512;
+    const studioContext = studioCanvas.getContext('2d');
+    studioContext.fillStyle = brand.surface;
+    studioContext.fillRect(0, 0, 1024, 512);
+    const softbox = (x, y, width, height, color) => {
+        const glow = studioContext.createRadialGradient(0, 0, 0, 0, 0, 1);
+        glow.addColorStop(0, color);
+        glow.addColorStop(.65, color);
+        glow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        studioContext.save();
+        studioContext.translate(x, y);
+        studioContext.scale(width, height);
+        studioContext.fillStyle = glow;
+        studioContext.fillRect(-1, -1, 2, 2);
+        studioContext.restore();
+    };
+    softbox(240, 160, 80, 150, '#ffffff');
+    softbox(760, 220, 45, 180, '#dce8ff');
+    softbox(500, 80, 180, 35, brand.ivory);
+    softbox(940, 330, 65, 110, brand.red);
+    const studioTexture = new THREE.CanvasTexture(studioCanvas);
+    studioTexture.mapping = THREE.EquirectangularReflectionMapping;
+    studioTexture.colorSpace = THREE.SRGBColorSpace;
+    const environmentGenerator = new THREE.PMREMGenerator(renderer);
+    const environment = environmentGenerator.fromEquirectangular(studioTexture);
+    scene.environment = environment.texture;
+    studioTexture.dispose();
+    environmentGenerator.dispose();
     const camera = new THREE.PerspectiveCamera(40, 1, .1, 60);
     camera.position.z = 10;
     scene.add(new THREE.HemisphereLight(brand.ivory, brand.surface, 2.5));
@@ -74,30 +104,50 @@ try {
     scene.add(sculpture);
     const d10 = createD10Data();
     const vertices = d10.vertices.map(vertex => new THREE.Vector3(...vertex));
-    const triangles = [];
+    const triangles = [], uvs = [];
     const faces = d10.faces.map(face => {
         const corners = face.indices.map(index => vertices[index]);
         const center = corners.reduce((sum, vertex) => sum.add(vertex), new THREE.Vector3()).divideScalar(4);
         const normal = corners[1].clone().sub(corners[0]).cross(corners[2].clone().sub(corners[0])).normalize();
         if (normal.dot(center) < 0) { corners.reverse(); normal.negate(); }
+        const pole = vertices[face.indices[0]];
+        const up = pole.clone().sub(center).normalize();
+        const right = up.clone().cross(normal).normalize();
+        const local = corners.map(vertex => {
+            const offset = vertex.clone().sub(center);
+            return new THREE.Vector2(offset.dot(right), offset.dot(up));
+        });
+        const minX = Math.min(...local.map(p => p.x)), maxX = Math.max(...local.map(p => p.x));
+        const minY = Math.min(...local.map(p => p.y)), maxY = Math.max(...local.map(p => p.y));
+        // Fit the complete label inside all four edges of the kite face.
+        const labelSize = Math.min(...local.map((point, index) => {
+            const next = local[(index + 1) % local.length];
+            const dx = next.x - point.x, dy = next.y - point.y;
+            return 2 * Math.abs(dx * point.y - dy * point.x) / (Math.abs(dx) + Math.abs(dy));
+        })) * .94;
         for (const vertex of [corners[0], corners[1], corners[2], corners[0], corners[2], corners[3]]) {
             triangles.push(vertex.x, vertex.y, vertex.z);
+            const offset = vertex.clone().sub(center);
+            uvs.push((offset.dot(right) - minX) / (maxX - minX), (offset.dot(up) - minY) / (maxY - minY));
         }
-        const pole = vertices[face.indices[0]];
-        return { center, normal, up: pole.clone().sub(center).normalize(), number: face.number };
+        return { center, normal, up, labelSize, number: face.number };
     });
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute('position', new THREE.Float32BufferAttribute(triangles, 3));
+    geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
     geometry.computeVertexNormals();
+    // Clear ruby glass: tint grows with optical depth instead of an opaque resin map.
     const material = new THREE.MeshPhysicalMaterial({
-        color: brand.red, metalness: .48, roughness: .3, flatShading: true,
-        clearcoat: .8, clearcoatRoughness: .2
+        color: '#fff0ee', metalness: 0, roughness: .055, flatShading: true,
+        transmission: .96, thickness: 1.6, ior: 1.5,
+        attenuationColor: new THREE.Color(brand.red), attenuationDistance: 3.2,
+        clearcoat: 1, clearcoatRoughness: .035, envMapIntensity: 1.35
     });
     const die = new THREE.Group();
     const mesh = new THREE.Mesh(geometry, material);
     die.add(mesh);
     const edges = new THREE.LineSegments(new THREE.EdgesGeometry(geometry),
-        new THREE.LineBasicMaterial({ color: brand.ivory, transparent: true, opacity: .55 }));
+        new THREE.LineBasicMaterial({ color: brand.ivory, transparent: true, opacity: .12 }));
     edges.scale.setScalar(1.002);
     die.add(edges);
     sculpture.add(die);
@@ -106,21 +156,21 @@ try {
     const labels = [];
     const paintLabel = (labelCanvas, number) => {
         const ctx = labelCanvas.getContext('2d');
-        ctx.clearRect(0, 0, 128, 128);
-        ctx.font = `600 66px ${brandStyles.getPropertyValue('--font-display').trim()}`;
+        ctx.clearRect(0, 0, 256, 256);
+        ctx.font = `600 240px ${brandStyles.getPropertyValue('--font-display').trim()}`;
         ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = brand.ivory;
-        ctx.fillText(String(number), 64, 65);
-        if (number === 6 || number === 9) ctx.fillRect(49, 100, 30, 3);
+        ctx.fillText(String(number), 128, 137, 224);
+        if (number === 6 || number === 9) ctx.fillRect(91, 233, 74, 5);
     };
     for (const face of faces) {
         const labelCanvas = document.createElement('canvas');
-        labelCanvas.width = labelCanvas.height = 128;
+        labelCanvas.width = labelCanvas.height = 256;
         // Underline 6 and 9 so they remain legible during rotation.
         paintLabel(labelCanvas, face.number);
         const texture = new THREE.CanvasTexture(labelCanvas);
         texture.colorSpace = THREE.SRGBColorSpace;
         labels.push({ canvas: labelCanvas, number: face.number, texture });
-        const label = new THREE.Mesh(new THREE.PlaneGeometry(.52, .52),
+        const label = new THREE.Mesh(new THREE.PlaneGeometry(face.labelSize, face.labelSize),
             new THREE.MeshBasicMaterial({ map: texture, transparent: true, depthWrite: false, toneMapped: false }));
         label.position.copy(face.center).addScaledVector(face.normal, .008);
         const right = face.up.clone().cross(face.normal).normalize();
@@ -294,7 +344,7 @@ try {
     resize();
     story.classList.add('orbit-ready'); pulse.disabled = false;
     updateLoop();
-    document.fonts.load('600 66px Cinzel').then(() => {
+    document.fonts.load('600 240px Cinzel').then(() => {
         if (contextLost) return;
         labels.forEach(label => { paintLabel(label.canvas, label.number); label.texture.needsUpdate = true; });
         measureJourney();
@@ -309,8 +359,9 @@ try {
         scene.traverse(object => {
             object.geometry?.dispose();
             const materials = Array.isArray(object.material) ? object.material : [object.material];
-            materials.forEach(item => { item?.map?.dispose(); item?.dispose(); });
+            materials.forEach(item => { item?.map?.dispose(); item?.bumpMap?.dispose(); item?.dispose(); });
         });
+        environment.dispose();
         renderer.dispose();
     }, { once: true });
 } catch (error) {
