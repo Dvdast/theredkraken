@@ -119,16 +119,21 @@ try {
         });
         const minX = Math.min(...local.map(p => p.x)), maxX = Math.max(...local.map(p => p.x));
         const minY = Math.min(...local.map(p => p.y)), maxY = Math.max(...local.map(p => p.y));
+        const textureSpan = Math.max(maxX - minX, maxY - minY);
         // Fit the complete label inside all four edges of the kite face.
         const labelSize = Math.min(...local.map((point, index) => {
             const next = local[(index + 1) % local.length];
             const dx = next.x - point.x, dy = next.y - point.y;
             return 2 * Math.abs(dx * point.y - dy * point.x) / (Math.abs(dx) + Math.abs(dy));
         })) * .94;
-        for (const vertex of [corners[0], corners[1], corners[2], corners[0], corners[2], corners[3]]) {
+        // A square projection preserves the original logo's proportions on each face.
+        for (const index of [0, 1, 2, 0, 2, 3]) {
+            const vertex = corners[index];
             triangles.push(vertex.x, vertex.y, vertex.z);
-            const offset = vertex.clone().sub(center);
-            uvs.push((offset.dot(right) - minX) / (maxX - minX), (offset.dot(up) - minY) / (maxY - minY));
+            uvs.push(
+                .5 + (local[index].x - (minX + maxX) / 2) / textureSpan,
+                .5 + (local[index].y - (minY + maxY) / 2) / textureSpan
+            );
         }
         return { center, normal, up, labelSize, number: face.number };
     });
@@ -136,12 +141,17 @@ try {
     geometry.setAttribute('position', new THREE.Float32BufferAttribute(triangles, 3));
     geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
     geometry.computeVertexNormals();
-    // Clear ruby glass: tint grows with optical depth instead of an opaque resin map.
+    // The original brand logo fills the background of every numbered face.
+    const krakenTexture = await new THREE.TextureLoader().loadAsync(
+        new URL('../assets/img/d10-kraken-texture.svg', import.meta.url).href
+    );
+    krakenTexture.colorSpace = THREE.SRGBColorSpace;
+    krakenTexture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
     const material = new THREE.MeshPhysicalMaterial({
-        color: '#fff0ee', metalness: 0, roughness: .055, flatShading: true,
-        transmission: .96, thickness: 1.6, ior: 1.5,
+        map: krakenTexture, color: '#ffffff', metalness: 0, roughness: .2, flatShading: true,
+        transmission: .08, thickness: 1.6, ior: 1.5,
         attenuationColor: new THREE.Color(brand.red), attenuationDistance: 3.2,
-        clearcoat: 1, clearcoatRoughness: .035, envMapIntensity: 1.35
+        clearcoat: 1, clearcoatRoughness: .08, envMapIntensity: 1.1
     });
     const die = new THREE.Group();
     const mesh = new THREE.Mesh(geometry, material);
@@ -205,7 +215,7 @@ try {
     const manifestoAnchor = document.querySelector('#manifesto-dice-anchor');
     const finalAnchor = document.querySelector('#final-dice-anchor');
     const modalities = document.querySelector('#modalidades');
-    const journeySections = ['modalidades', 'experiencias', 'sobre-mi', 'resenas', 'universo', 'como-funciona']
+    const journeySections = ['modalidades', 'universo', 'sobre-mi', 'resenas', 'como-funciona']
         .map(id => document.getElementById(id)).filter(Boolean);
     const sceneViewport = document.querySelector('.orbit-viewport');
     let journeyStops = [];

@@ -269,6 +269,22 @@
             opacity: .16;
         }
 
+        .footer-layout {
+            display: grid;
+            align-items: center;
+            gap: 2rem;
+            text-align: center;
+        }
+
+        @media (min-width: 768px) {
+            .footer-layout {
+                grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+            }
+
+            .footer-layout > :first-child { text-align: left; }
+            .footer-layout > :last-child { text-align: right; }
+        }
+
         /* Accessibility */
 
         @media (prefers-reduced-motion: reduce) {
@@ -315,7 +331,6 @@
 
     <link rel="stylesheet" href="./css/palette.css">
     <link rel="stylesheet" href="./css/orbit.css">
-    <link rel="stylesheet" href="./css/experiences.css">
     <link rel="stylesheet" href="./css/reviews.css">
     <link rel="stylesheet" href="./css/conversion.css">
 </head>
@@ -326,9 +341,9 @@
     <noscript>
         <style>#menu-toggle { display: none; }</style>
         <nav class="no-script-nav" aria-label="Navegación sin JavaScript">
-            <a href="#modalidades">Elige tu experiencia</a>
-            <a href="#experiencias">Partidas destacadas</a>
-            <a href="https://theredkraken.com/campanas">Catálogo completo</a>
+            <a href="#modalidades">Experiencias</a>
+            <a href="#universo">Redes</a>
+            <a href="https://theredkraken.com/campanas">Partidas</a>
             <a href="https://theredkraken.com/eventos">Eventos presenciales</a>
         </nav>
     </noscript>
@@ -390,17 +405,17 @@
 
                 <a href="#manifiesto" class="text-[11px] tracking-[0.12em] text-kraken-ivory/60 transition hover:text-kraken-ivory">FILOSOFÍA</a>
 
-                <a href="#modalidades" class="text-[11px] tracking-[0.12em] text-kraken-ivory/60 transition hover:text-kraken-ivory">MODALIDADES</a>
+                <a href="#modalidades" class="text-[11px] tracking-[0.12em] text-kraken-ivory/60 transition hover:text-kraken-ivory">EXPERIENCIAS</a>
 
-                <a href="#experiencias" class="text-[11px] tracking-[0.12em] text-kraken-ivory/60 transition hover:text-kraken-ivory">CAMPAÑAS</a>
+                <a href="#universo" class="text-[11px] tracking-[0.12em] text-kraken-ivory/60 transition hover:text-kraken-ivory">REDES</a>
 
                 <a href="#sobre-mi" class="text-[11px] tracking-[0.12em] text-kraken-ivory/60 transition hover:text-kraken-ivory">SOBRE MÍ</a>
 
-                <a href="#resenas" class="text-[11px] tracking-[0.12em] text-kraken-ivory/60 transition hover:text-kraken-ivory">RESEÑAS</a>
+                <a href="#resenas" class="text-[11px] tracking-[0.12em] text-kraken-ivory/60 transition hover:text-kraken-ivory">OPINIONES</a>
 
-                <a href="#universo" class="text-[11px] tracking-[0.12em] text-kraken-ivory/60 transition hover:text-kraken-ivory">COMUNIDAD</a>
+                <a href="#como-funciona" class="text-[11px] tracking-[0.12em] text-kraken-ivory/60 transition hover:text-kraken-ivory">CÓMO JUGAR</a>
 
-                <a href="#como-funciona" class="text-[11px] tracking-[0.12em] text-kraken-ivory/60 transition hover:text-kraken-ivory">CÓMO FUNCIONA</a>
+                <a href="#contacto" class="text-[11px] tracking-[0.12em] text-kraken-ivory/60 transition hover:text-kraken-ivory">CONTACTO</a>
 
             </nav>
 
@@ -408,7 +423,7 @@
 
             <!-- DESKTOP CTA -->
 
-            <a href="#contacto" data-light-button class="group hidden xl:inline-flex
+            <a href="https://theredkraken.com/campanas" data-light-button class="group hidden xl:inline-flex
                 items-center gap-3
                 border border-kraken-red
                 bg-kraken-red/10
@@ -420,7 +435,7 @@
                 hover:bg-kraken-red
                 hover:shadow-redglow">
 
-                JUEGA CONMIGO
+                VER PARTIDAS
 
                 <span class="transition-transform duration-300">
                     →
@@ -473,24 +488,24 @@
 
             <a href="#manifiesto" class="font-display text-xl">Filosofía</a>
 
-            <a href="#modalidades" class="font-display text-xl">Elige tu experiencia</a>
+            <a href="#modalidades" class="font-display text-xl">Experiencias</a>
 
-            <a href="#experiencias" class="font-display text-xl">Campañas</a>
+            <a href="#universo" class="font-display text-xl">Redes</a>
 
             <a href="#sobre-mi" class="font-display text-xl">Sobre mí</a>
 
-            <a href="#resenas" class="font-display text-xl">Reseñas</a>
+            <a href="#resenas" class="font-display text-xl">Opiniones</a>
 
-            <a href="#universo" class="font-display text-xl">Comunidad</a>
+            <a href="#como-funciona" class="font-display text-xl">Cómo jugar</a>
 
-            <a href="#como-funciona" class="font-display text-xl">Cómo funciona</a>
+            <a href="#contacto" class="font-display text-xl">Contacto</a>
 
-            <a href="#contacto" class="mt-4 border border-kraken-red
+            <a href="https://theredkraken.com/campanas" class="mt-4 border border-kraken-red
                 bg-kraken-red/10
                 px-6 py-4
                 text-center text-xs
                 tracking-[0.2em]">
-                JUEGA CONMIGO
+                VER PARTIDAS
             </a>
 
         </nav>
@@ -590,7 +605,7 @@
                         sm:flex-row">
 
 
-                        <a href="#experiencias" data-light-button class="group relative
+                        <a href="https://theredkraken.com/campanas" data-light-button class="group relative
                             inline-flex
                             items-center
                             justify-center
@@ -860,7 +875,7 @@
                         <p class="modality-audience">Para grupos privados</p>
                         <h3>Tu grupo. <span class="text-kraken-crimson">Vuestra historia.</span></h3>
                         <p>Reúne a tus amigos y deja la dirección en manos de Geni. Una campaña o aventura adaptada a vuestro grupo.</p>
-                        <a class="conversion-button" data-light-button href="https://theredkraken.com/campanas">CONSULTAR PARTIDA PRIVADA <span aria-hidden="true">→</span></a>
+                        <a class="conversion-button" data-light-button href="https://theredkraken.com/contacto#pedirpartida">CONSULTAR PARTIDA PRIVADA <span aria-hidden="true">→</span></a>
                         <p class="modality-note">Consulta las opciones y solicita un presupuesto para vuestro grupo.</p>
                     </article>
                     <article class="modality-card" data-reveal data-light-card>
@@ -875,283 +890,11 @@
             </div>
         </section>
 
-        <section id="experiencias" aria-labelledby="experiences-title">
-            <div class="adventure-shell">
-                <header class="adventure-heading">
-                    <div>
-                        <p>EXPERIENCIAS DESTACADAS &middot; MESAS ROLERAS</p>
-                        <h2 id="experiences-title">Elige tu <span class="text-kraken-crimson">próxima historia.</span></h2>
-                    </div>
-                    <a class="adventure-all" href="https://theredkraken.com/campanas">CATÁLOGO COMPLETO · THE RED KRAKEN &rarr;</a>
-                </header>
-                <div class="adventure-gallery">
-                    <article class="adventure-card" id="experience-chapter-1">
-                        <a class="adventure-cover" href="https://mesasroleras.com/mesas/0tvb" target="_blank" rel="noopener noreferrer">
-                            <span class="adventure-art">
-                                <img src="./assets/img/urborg-cover.webp" alt="" loading="lazy" decoding="async" width="1280" height="720">
-                                <span class="adventure-tag">CAMPAÑA CORTA</span>
-                                <span class="adventure-ordinal" aria-hidden="true">01</span>
-                            </span>
-                            <div class="adventure-cover-copy">
-                                <span class="adventure-system">Dungeons &amp; Dragons 5e (2014)</span>
-                                <h3 class="adventure-title">Los Mártires <span class="text-kraken-crimson">de Urborg</span></h3>
-                                <span class="adventure-duration">Online &middot; Campaña de 4 a 8 sesiones</span>
-                            </div>
-                            <div class="adventure-card-footer">
-                                <p class="adventure-price">17,50 &euro;<small>por sesión · Mesas Roleras</small></p>
-                                <span class="adventure-open">CONSULTAR PLAZA<span>Mesas Roleras &nearr;</span></span>
-                            </div>
-                        </a>
-                    </article>
-                    <article class="adventure-card" id="experience-chapter-2">
-                        <a class="adventure-cover" href="https://mesasroleras.com/mesas/vtuv" target="_blank" rel="noopener noreferrer">
-                            <span class="adventure-art">
-                                <img src="./assets/img/vatnajokull-cover.webp" alt="" loading="lazy" decoding="async" width="1280" height="720">
-                                <span class="adventure-tag">PRINCIPIANTES</span>
-                                <span class="adventure-ordinal" aria-hidden="true">02</span>
-                            </span>
-                            <div class="adventure-cover-copy">
-                                <span class="adventure-system">La Llamada de Cthulhu</span>
-                                <h3 class="adventure-title">La sima <span class="text-kraken-crimson">Vatnajökull</span></h3>
-                                <span class="adventure-duration">Online &middot; Una sesión (one-shot)</span>
-                            </div>
-                            <div class="adventure-card-footer">
-                                <p class="adventure-price">20,00 &euro;<small>por sesión · Mesas Roleras</small></p>
-                                <span class="adventure-open">CONSULTAR PLAZA<span>Mesas Roleras &nearr;</span></span>
-                            </div>
-                        </a>
-                    </article>
-                    <article class="adventure-card" id="experience-chapter-3">
-                        <a class="adventure-cover" href="https://mesasroleras.com/mesas/ytuu" target="_blank" rel="noopener noreferrer">
-                            <span class="adventure-art">
-                                <img src="./assets/img/sombra-cover.webp" alt="" loading="lazy" decoding="async" width="1280" height="720">
-                                <span class="adventure-tag">ONE-SHOT</span>
-                                <span class="adventure-ordinal" aria-hidden="true">03</span>
-                            </span>
-                            <div class="adventure-cover-copy">
-                                <span class="adventure-system">La Llamada de Cthulhu</span>
-                                <h3 class="adventure-title">La sombra <span class="text-kraken-crimson">sobre la puerta</span></h3>
-                                <span class="adventure-duration">Online &middot; Una sesión (one-shot)</span>
-                            </div>
-                            <div class="adventure-card-footer">
-                                <p class="adventure-price">20,00 &euro;<small>por sesión · Mesas Roleras</small></p>
-                                <span class="adventure-open">CONSULTAR PLAZA<span>Mesas Roleras &nearr;</span></span>
-                            </div>
-                        </a>
-                    </article>
-                </div>
-                <p class="catalogue-note">Estas partidas se consultan en Mesas Roleras y se abren en una nueva pestaña. Comprueba allí las plazas, los horarios y las condiciones actuales. El catálogo de The Red Kraken tiene su propio proceso de solicitud y sus propias tarifas.</p>
-            </div>
-        </section>
-
-        <!-- =================================================
-             ABOUT
-        ================================================== -->
-
-        <section id="sobre-mi" class="py-24 lg:py-32">
-
-            <div class="mx-auto
-                grid max-w-[1440px]
-                gap-14
-                px-6
-                lg:grid-cols-2
-                lg:items-center
-                lg:px-10">
-
-
-                <!-- PHOTO -->
-
-                <div data-reveal class="relative">
-
-                    <div class="absolute
-                        -inset-8 -z-10
-                        bg-kraken-red/10
-                        blur-[100px]"></div>
-
-                    <img src="./assets/img/geni_foto.webp" srcset="./assets/img/geni_foto.webp 640w, ./assets/img/geni_foto.webp 1280w"
-                        sizes="(min-width: 1440px) 652px, (min-width: 1024px) calc((100vw - 136px) / 2), calc(100vw - 48px)"
-                        width="1280" height="1074" loading="lazy" decoding="async" alt="Geni, director de juegos de rol de The Red Kraken" class="aspect-[4/5]
-                        w-full
-                        object-cover
-                        grayscale
-                        transition duration-700
-                        hover:grayscale-0">
-
-                </div>
-
-
-
-                <!-- TEXT -->
-
-                <div data-reveal>
-
-                    <p class="mb-5
-                        text-xs
-                        tracking-[0.3em]
-                        text-kraken-crimson">
-                        THE RED KRAKEN
-                    </p>
-
-
-                    <h2 class="font-display
-                        text-4xl
-                        sm:text-5xl
-                        lg:text-6xl">
-                        Detrás <span class="text-kraken-crimson">del Kraken.</span>
-                    </h2>
-
-
-                    <p class="mt-8
-                        max-w-xl
-                        leading-8
-                        text-kraken-muted">
-                        “Puede que contar historias sea el acto social más antiguo de la Humanidad.
-                        Desatar nuestra imaginación y compartirla con el resto de nuestros semejantes
-                        es algo casi innato en la especie humana.
-                    </p>
-
-                    <p class="mt-8 max-w-xl leading-8 text-kraken-muted">
-                        Los juegos de rol no son más que el siguiente paso: crear una historia colectiva,
-                        una experiencia narrativa alrededor de una mesa o frente a una pantalla, que remueva
-                        nuestras conciencias. Tirar dados es solo un trámite que nos permite habitar las
-                        historias que creamos, con consecuencias reales, personajes carismáticos, y generando
-                        una experiencia narrativa total.
-                    </p>
-
-                    <p class="mt-8 max-w-xl leading-8 text-kraken-muted">
-                        Con esta filosofía, diseñamos las partidas de The Red Kraken con una alta inmersión
-                        audiovisual, respeto por la mesa y los jugadores, intensidad e inmersión emocional
-                        y quórum garantizado para que las sesiones tengan la máxima continuidad.”
-                    </p>
-
-
-                    <div class="mt-10
-                        grid grid-cols-2
-                        gap-px
-                        border border-kraken-ivory/10
-                        bg-kraken-ivory/10">
-
-                        <div class="bg-kraken-black p-6">
-
-                            <span class="text-xs
-                                tracking-[0.2em]
-                                text-kraken-crimson">
-                                EXPERIENCIA
-                            </span>
-
-                            <p class="mt-2
-                                font-display
-                                text-xl">
-                                Más de 1500 sesiones como DM profesional.
-                            </p>
-
-                        </div>
-
-
-                        <div class="bg-kraken-black p-6">
-
-                            <span class="text-xs
-                                tracking-[0.2em]
-                                text-kraken-crimson">
-                                FORMACIÓN
-                            </span>
-
-                            <p class="mt-2
-                                font-display
-                                text-xl">
-                                Comunicación Audiovisual<br>
-                                Creación de guiones<br>
-                                Actor de voz
-                            </p>
-
-                        </div>
-
-
-                        <div class="bg-kraken-black p-6">
-
-                            <span class="text-xs
-                                tracking-[0.2em]
-                                text-kraken-crimson">
-                                COMUNIDAD
-                            </span>
-
-                            <p class="mt-2
-                                font-display
-                                text-xl">
-                                +300 usuarios en Discord
-                            </p>
-
-                        </div>
-
-
-                        <div class="bg-kraken-black p-6">
-
-                            <span class="text-xs
-                                tracking-[0.2em]
-                                text-kraken-crimson">
-                                PROFESIONALIDAD
-                            </span>
-
-                            <p class="mt-2
-                                font-display
-                                text-xl">
-                                Garantías de quorum y asistencia
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- =================================================
-             REVIEWS
-        ================================================== -->
-
-        <section id="resenas" aria-labelledby="reviews-title">
-            <div class="reviews-shell">
-                <header class="reviews-header">
-                    <div class="reviews-heading">
-                        <p>RESE&Ntilde;AS</p>
-                        <h2 id="reviews-title">Lo que dicen <span class="text-kraken-crimson">quienes sobrevivieron.</span></h2>
-                    </div>
-                    <div class="reviews-controls" aria-label="Controles de rese&ntilde;as">
-                        <span class="reviews-counter" aria-hidden="true">00 / 00</span>
-                        <button id="reviews-previous" class="reviews-arrow" type="button" aria-label="Rese&ntilde;a anterior" disabled>&larr;</button>
-                        <button id="reviews-next" class="reviews-arrow" type="button" aria-label="Siguiente rese&ntilde;a" disabled>&rarr;</button>
-                    </div>
-                </header>
-                <div class="reviews-viewport" role="region" aria-roledescription="carrusel" aria-label="Rese&ntilde;as de jugadores" tabindex="0">
-                    <div class="reviews-track">
-                        <article class="review-card is-placeholder">
-                            <div class="review-top"><span class="review-pending">Reseñas de jugadores</span></div>
-                            <p>Consulta las reseñas originales de quienes han jugado con Geni en Mesas Roleras.</p>
-                            <a class="review-source" href="https://mesasroleras.com/gm/the-redkraken">Leer reseñas originales</a>
-                        </article>
-                    </div>
-                </div>
-                <div class="reviews-footer">
-                    <button id="reviews-play" class="reviews-play" type="button" aria-pressed="false" disabled>PAUSAR</button>
-                    <div class="reviews-rail" aria-hidden="true"><div class="reviews-timer"></div></div>
-                    <p class="reviews-note">28 reseñas completas de Mesas Roleras con enlace a su fuente.</p>
-                </div>
-                <p class="reviews-live" role="status" aria-live="polite" aria-atomic="true"></p>
-                <a class="reviews-originals" href="https://mesasroleras.com/gm/the-redkraken">Ver todas las reseñas en Mesas Roleras <span aria-hidden="true">↗</span></a>
-            </div>
-        </section>
-
         <!-- =================================================
              UNIVERSE
         ================================================== -->
 
-        <section id="universo" class="border-t border-kraken-ivory/10
-            py-24">
+        <section id="universo" class="py-24">
 
             <div class="mx-auto max-w-[1440px]
                 px-6 lg:px-10">
@@ -1410,6 +1153,210 @@
 
         </section>
 
+        <!-- =================================================
+             ABOUT
+        ================================================== -->
+
+        <section id="sobre-mi" class="py-24 lg:py-32">
+
+            <div class="mx-auto
+                grid max-w-[1440px]
+                gap-14
+                px-6
+                lg:grid-cols-2
+                lg:items-center
+                lg:px-10">
+
+
+                <!-- PHOTO -->
+
+                <div data-reveal class="relative">
+
+                    <div class="absolute
+                        -inset-8 -z-10
+                        bg-kraken-red/10
+                        blur-[100px]"></div>
+
+                    <img src="./assets/img/geni_foto.webp" srcset="./assets/img/geni_foto.webp 640w, ./assets/img/geni_foto.webp 1280w"
+                        sizes="(min-width: 1440px) 652px, (min-width: 1024px) calc((100vw - 136px) / 2), calc(100vw - 48px)"
+                        width="1280" height="1074" loading="lazy" decoding="async" alt="Geni, director de juegos de rol de The Red Kraken" class="aspect-[4/5]
+                        w-full
+                        object-cover
+                        grayscale
+                        transition duration-700
+                        hover:grayscale-0">
+
+                </div>
+
+
+
+                <!-- TEXT -->
+
+                <div data-reveal>
+
+                    <p class="mb-5
+                        text-xs
+                        tracking-[0.3em]
+                        text-kraken-crimson">
+                        THE RED KRAKEN
+                    </p>
+
+
+                    <h2 class="font-display
+                        text-4xl
+                        sm:text-5xl
+                        lg:text-6xl">
+                        Detrás <span class="text-kraken-crimson">del Kraken.</span>
+                    </h2>
+
+
+                    <p class="mt-8
+                        max-w-xl
+                        leading-8
+                        text-kraken-muted">
+                        “Puede que contar historias sea el acto social más antiguo de la Humanidad.
+                        Desatar nuestra imaginación y compartirla con el resto de nuestros semejantes
+                        es algo casi innato en la especie humana.
+                    </p>
+
+                    <p class="mt-8 max-w-xl leading-8 text-kraken-muted">
+                        Los juegos de rol no son más que el siguiente paso: crear una historia colectiva,
+                        una experiencia narrativa alrededor de una mesa o frente a una pantalla, que remueva
+                        nuestras conciencias. Tirar dados es solo un trámite que nos permite habitar las
+                        historias que creamos, con consecuencias reales, personajes carismáticos, y generando
+                        una experiencia narrativa total.
+                    </p>
+
+                    <p class="mt-8 max-w-xl leading-8 text-kraken-muted">
+                        Con esta filosofía, diseñamos las partidas de The Red Kraken con una alta inmersión
+                        audiovisual, respeto por la mesa y los jugadores, intensidad e inmersión emocional
+                        y quórum garantizado para que las sesiones tengan la máxima continuidad.”
+                    </p>
+
+
+                    <div class="mt-10
+                        grid grid-cols-2
+                        gap-px
+                        border border-kraken-ivory/10
+                        bg-kraken-ivory/10">
+
+                        <div class="bg-kraken-black p-6">
+
+                            <span class="text-xs
+                                tracking-[0.2em]
+                                text-kraken-crimson">
+                                EXPERIENCIA
+                            </span>
+
+                            <p class="mt-2
+                                font-display
+                                text-xl">
+                                Más de 1500 sesiones como DM profesional.
+                            </p>
+
+                        </div>
+
+
+                        <div class="bg-kraken-black p-6">
+
+                            <span class="text-xs
+                                tracking-[0.2em]
+                                text-kraken-crimson">
+                                FORMACIÓN
+                            </span>
+
+                            <p class="mt-2
+                                font-display
+                                text-xl">
+                                Comunicación Audiovisual<br>
+                                Creación de guiones<br>
+                                Actor de voz
+                            </p>
+
+                        </div>
+
+
+                        <div class="bg-kraken-black p-6">
+
+                            <span class="text-xs
+                                tracking-[0.2em]
+                                text-kraken-crimson">
+                                COMUNIDAD
+                            </span>
+
+                            <p class="mt-2
+                                font-display
+                                text-xl">
+                                +300 usuarios en Discord
+                            </p>
+
+                        </div>
+
+
+                        <div class="bg-kraken-black p-6">
+
+                            <span class="text-xs
+                                tracking-[0.2em]
+                                text-kraken-crimson">
+                                PROFESIONALIDAD
+                            </span>
+
+                            <p class="mt-2
+                                font-display
+                                text-xl">
+                                Garantías de quorum y asistencia
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             REVIEWS
+        ================================================== -->
+
+        <section id="resenas" aria-labelledby="reviews-title">
+            <div class="reviews-shell">
+                <header class="reviews-header">
+                    <div class="reviews-heading">
+                        <p>RESE&Ntilde;AS</p>
+                        <h2 id="reviews-title">Lo que dicen <span class="text-kraken-crimson">quienes sobrevivieron.</span></h2>
+                    </div>
+                    <div class="reviews-controls" aria-label="Controles de rese&ntilde;as">
+                        <span class="reviews-counter" aria-hidden="true">00 / 00</span>
+                        <button id="reviews-previous" class="reviews-arrow" type="button" aria-label="Rese&ntilde;a anterior" disabled>&larr;</button>
+                        <button id="reviews-next" class="reviews-arrow" type="button" aria-label="Siguiente rese&ntilde;a" disabled>&rarr;</button>
+                    </div>
+                </header>
+                <div class="reviews-viewport" role="region" aria-roledescription="carrusel" aria-label="Rese&ntilde;as de jugadores" tabindex="0">
+                    <div class="reviews-track">
+                        <article class="review-card is-placeholder">
+                            <div class="review-top"><span class="review-pending">Reseñas de jugadores</span></div>
+                            <p>Consulta las reseñas originales de quienes han jugado con Geni en Mesas Roleras.</p>
+                            <a class="review-source" href="https://mesasroleras.com/gm/the-redkraken">Leer reseñas originales</a>
+                        </article>
+                    </div>
+                </div>
+                <div class="reviews-footer">
+                    <button id="reviews-play" class="reviews-play" type="button" aria-pressed="false" disabled>PAUSAR</button>
+                    <div class="reviews-rail" aria-hidden="true"><div class="reviews-timer"></div></div>
+                    <p class="reviews-note">28 reseñas completas de Mesas Roleras con enlace a su fuente.</p>
+                </div>
+                <p class="reviews-live" role="status" aria-live="polite" aria-atomic="true"></p>
+                <a class="reviews-originals" href="https://mesasroleras.com/gm/the-redkraken">Ver todas las reseñas en Mesas Roleras <span aria-hidden="true">↗</span></a>
+            </div>
+        </section>
+
+
+
 
 
         <!-- =================================================
@@ -1499,7 +1446,7 @@
 
                 </a>
 
-                    <a class="conversion-button" data-light-button href="https://theredkraken.com/eventos">CONSULTAR EXPERIENCIA PRIVADA <span aria-hidden="true">→</span></a>
+                    <a class="conversion-button" data-light-button href="https://theredkraken.com/contacto#pedirpartida">CONSULTAR EXPERIENCIA PRIVADA <span aria-hidden="true">→</span></a>
                 </div>
                 <a class="conversion-text-link final-event-link" href="https://theredkraken.com/eventos">Para una experiencia presencial, solicita presupuesto <span aria-hidden="true">↗</span></a>
 
@@ -1520,13 +1467,9 @@
         bg-kraken-black
         py-12">
 
-        <div class="mx-auto
-            flex max-w-[1440px]
-            flex-col gap-10
+        <div class="footer-layout mx-auto
+            max-w-[1440px]
             px-6
-            md:flex-row
-            md:items-end
-            md:justify-between
             lg:px-10">
 
 
@@ -1552,47 +1495,20 @@
 
 
 
-            <nav class="flex flex-wrap gap-6
-                text-[10px]
-                tracking-[0.18em]
-                text-kraken-ivory/40">
-
-                <a href="#experiencias" class="transition hover:text-kraken-ivory">
-                    EXPERIENCIAS
+            <p class="text-center text-sm text-kraken-ivory/60">
+                dev with
+                <span class="text-kraken-red">♥</span>
+                by
+                <a href="https://www.davidgarciadev.es" target="_blank" rel="noopener noreferrer"
+                    class="text-kraken-ivory transition hover:text-kraken-ivory">
+                    david garcia
                 </a>
-
-                <a href="#sobre-mi" class="transition hover:text-kraken-ivory">
-                    SOBRE MÍ
-                </a>
-
-                <a href="#resenas" class="transition hover:text-kraken-ivory">
-                    RESEÑAS
-                </a>
-
-                <a href="#contacto" class="transition hover:text-kraken-ivory">
-                    CONTACTO
-                </a>
-
-            </nav>
-
-
+            </p>
 
             <p class="text-[10px]
                 text-kraken-ivory/30">
                 © 2026 The Red Kraken.
                 Todos los derechos reservados.
-            </p>
-
-            <p class="text-[10px]
-                text-kraken-ivory/30">
-                dev with
-                <span class="text-kraken-red">♥</span>
-                by
-
-                <a href="https://www.davidgarciadev.es" target="_blank" rel="noopener noreferrer"
-                    class="text-kraken-ivory transition hover:text-kraken-ivory">
-                    david garcia
-                </a>
             </p>
 
         </div>
@@ -1608,7 +1524,6 @@
     <script src="./js/vendor/gsap.min.js"></script>
     <script src="./js/vendor/ScrollTrigger.min.js"></script>
     <script src="./js/main.js"></script>
-    <script src="./js/experiences.js"></script>
     <script src="./js/reviews.js"></script>
     <script type="module" src="./js/orbit.js"></script>
 
